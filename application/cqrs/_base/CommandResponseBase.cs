@@ -2,20 +2,18 @@
 using application.interfaces.paging;
 using AutoMapper;
 using lib.common.interfaces;
-using System;
-using System.Text;
 
 namespace application.cqrs._base
 {
-    public class CommandResponseBase<TIdentity> : ICommandResponse<TIdentity> where TIdentity : struct, IEquatable<TIdentity>, IComparable<TIdentity>
+    public class CommandResponseBase : ICommandResponse
     {
-        public CommandResponseBase(string entity, TIdentity id)
+        public CommandResponseBase(string entity, object id)
         {
             Entity = entity;
             ID = id;
         }
 
-        public TIdentity ID { get; }
+        public object ID { get; }
 
         public string Entity { get; }
 

@@ -5,7 +5,7 @@ namespace domain
     public class EmployeeSchedule : BaseAudit<long>
     {
         public Guid EmployeeID { get; set; }
-        public long ShiftID { get; set; internal }
+        public long ShiftID { get; set; }
 
 
         public Employee Employee { get; set; }

@@ -2,9 +2,9 @@
 
 namespace application.interfaces.paging
 {
-    public interface ICommandResponse<Tidentity> where Tidentity : struct, IEquatable<Tidentity>, IComparable<Tidentity>
+    public interface ICommandResponse
     {
-        Tidentity ID { get; }
+        object ID { get; }
         string Entity { get; }
     }
 }

@@ -27,8 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\application\application.csproj" />
-    <ProjectReference Include="..\persistence\persistence.csproj" />
+    <ProjectReference Include="..\persistence\Auth.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

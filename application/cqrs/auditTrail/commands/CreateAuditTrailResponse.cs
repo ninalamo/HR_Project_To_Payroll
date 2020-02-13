@@ -1,10 +1,10 @@
 ﻿using application.cqrs._base;
 
-namespace application.cqrs.auditTrail.commands
+namespace application.cqrs.auditTrail
 {
-    public class CreateAuditTrailResponse : CommandResponseBase<long>
+    public class CreateAuditTrailResponse : CommandResponseBase
     {
-        public CreateAuditTrailResponse(string entity, long id) : base(entity, id)
+        public CreateAuditTrailResponse(string entity, object id) : base(entity, id)
         {
         }
     }

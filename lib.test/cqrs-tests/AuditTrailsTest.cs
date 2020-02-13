@@ -1,4 +1,5 @@
-﻿using application.cqrs.auditTrail.commands;
+﻿using application.cqrs.auditTrail;
+using application.cqrs.auditTrail.commands;
 using application.cqrs.auditTrail.queries;
 using AutoMapper;
 using lib.test.infrastructure;
@@ -42,12 +43,11 @@ namespace lib.test.cqrs_tests
 
             var result = await sut.Handle(new CreateAuditTrailRequest(), CancellationToken.None);
 
-            result.ShouldBeOfType<CreateAuditTrailResponse>();
-
+            result.ShouldBeOfType(typeof(CreateAuditTrailRequestHandler))'f'
+                                                                                                                                                                                                                                                                    
             result.Entity.ShouldBe("AuditTrail");
 
-            result.ID.ShouldBe(1);
-
+         
         }
     }
 }

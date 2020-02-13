@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\application\application.csproj" />
+    <ProjectReference Include="..\application\Auth.Application.csproj" />
   </ItemGroup>
 
 </Project>
