@@ -85,33 +85,17 @@ namespace lib.test.cqrs_tests
         [Fact]
         public async Task DeleteEmployee()
         {
-            var createHandler = new CreateEmployeeRequestHandler(_context, _mapper);
+                      
+            var getHandler = new GetEmployeeByIDRequestHandler(_context, _mapper);
 
-            var result = await createHandler.Handle(new CreateEmployeeRequest
-            {
-                CompanyEmail = "nino.alamo@kmc.solutions",
-                EmployeeNumber = "1234",
-                FirstName = "Nino Francisco",
-                LastName = "Alamo",
-                PersonalEmail = "janinejams@gmail.com",
-            }, CancellationToken.None);
+            var temp = await getHandler.Handle(new GetEmployeeByIDRequest { EmployeeID = Guid.Parse("96863F02-CE07-40FC-A2ED-A7FAFB36FEAD") }, CancellationToken.None);
 
-            result.ShouldBeOfType(typeof(CreateEmployeeResponse));
-
-            result.Entity.ShouldBe("Employee");
+            temp.FirstName.ShouldBe("Janinejams");
 
             var delHandler = new DeleteEmployeeRequestHandler(_context, _mapper);
 
-            await delHandler.Handle(new DeleteEmployeeRequest { EmployeeID = Guid.Parse(result.ID.ToString()) }, CancellationToken.None);
+            await delHandler.Handle(new DeleteEmployeeRequest { EmployeeID = Guid.Parse("96863F02-CE07-40FC-A2ED-A7FAFB36FEAD") }, CancellationToken.None);
 
-            var getHandler = new GetEmployeesRequestHandler(_context, _mapper);
-
-            var temp = await getHandler.Handle(new GetEmployeesRequest(), CancellationToken.None);
-
-            temp.Data.Count().ShouldBe(1);
-
-            
-           
         }
 
 
