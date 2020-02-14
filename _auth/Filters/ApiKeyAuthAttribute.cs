@@ -1,4 +1,5 @@
 ﻿using auth.api;
+using lib.common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;

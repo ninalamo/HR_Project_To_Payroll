@@ -1,5 +1,6 @@
 ﻿using auth.api.Data;
 using AutoMapper;
+using lib.common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -85,7 +86,7 @@ namespace auth.api
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "KMC Solutions Authorization API", Version = "v2" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Authorization API", Version = "v1" });
                 //First we define the security scheme
                 c.AddSecurityDefinition("Bearer", //Name the security scheme
                     new OpenApiSecurityScheme

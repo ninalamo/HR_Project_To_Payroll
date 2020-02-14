@@ -9,12 +9,11 @@ namespace auth.api
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
-            string ADMIN_ID = Guid.NewGuid().ToString();
-
+            string ADMIN_ID = "00000000-0000-0000-0000-000000000001";
 
             modelBuilder.Entity<IdentityRole>().HasData(new[] {
                 new IdentityRole { Id = ADMIN_ID, Name = "superadmin", NormalizedName = "SUPERADMIN"},
-                 new IdentityRole { Id = "admin", Name = "admin", NormalizedName = "admin"},
+                new IdentityRole { Id = "admin", Name = "admin", NormalizedName = "admin"},
                 new IdentityRole { Name = "user", NormalizedName = "USER"},
                 new IdentityRole { Name = "guest", NormalizedName = "GUEST"},
             });
@@ -26,9 +25,9 @@ namespace auth.api
                 {
                     Id = ADMIN_ID,
                     UserName = "superadmin",
-                    Email = "erp@kmc.solutions",
+                    Email = "nin.alamo@outlook.com",
                     EmailConfirmed = true,
-                    NormalizedEmail = "ERP@KMC.SOLUTIONS",
+                    NormalizedEmail = "NIN.ALAMO@OUTLOOK.COM",
                     NormalizedUserName = "SUPERADMIN",
                     PasswordHash = hasher.HashPassword(null, "Got2groove!"),
                     AzureId = Guid.Parse("816a1383-0cbc-41d8-ba52-54a49927bd9b"),

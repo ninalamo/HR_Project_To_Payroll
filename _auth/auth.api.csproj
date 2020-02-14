@@ -46,4 +46,8 @@
   <ItemGroup>
     <Folder Include="Services\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\lib.common\lib.common.csproj" />
+  </ItemGroup>
 </Project>
