@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using persistence;
 
-namespace persistence.Migrations
+namespace HR.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200213082309_init")]
-    partial class init
+    [Migration("20200214043915_schedule")]
+    partial class schedule
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -174,6 +174,10 @@ namespace persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CompanyEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -181,16 +185,16 @@ namespace persistence.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("EmployeeNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -198,7 +202,21 @@ namespace persistence.Migrations
                     b.Property<DateTimeOffset>("ModifiedOn")
                         .HasColumnType("datetimeoffset");
 
-                    b.HasKey("ID");
+                    b.Property<string>("PersonalEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID")
+                        .HasName("EmployeeID");
+
+                    b.HasIndex("CompanyEmail")
+                        .IsUnique();
+
+                    b.HasIndex("EmployeeNumber")
+                        .IsUnique()
+                        .HasFilter("[EmployeeNumber] IS NOT NULL");
+
+                    b.HasIndex("FirstName", "LastName");
 
                     b.ToTable("Employees");
                 });
@@ -231,11 +249,12 @@ namespace persistence.Migrations
                     b.Property<long>("ShiftID")
                         .HasColumnType("bigint");
 
-                    b.HasKey("ID");
-
-                    b.HasIndex("EmployeeID");
+                    b.HasKey("ID")
+                        .HasName("ScheduleID");
 
                     b.HasIndex("ShiftID");
+
+                    b.HasIndex("EmployeeID", "ShiftID");
 
                     b.ToTable("Schedules");
                 });

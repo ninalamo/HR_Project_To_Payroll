@@ -11,8 +11,6 @@ namespace application.cqrs.Employee.Commands
 {
     public class CreateEmployeeRequestHandler : RequestHandlerBase, IRequestHandler<CreateEmployeeRequest, CreateEmployeeResponse>
     {
-        private object requst;
-
         public CreateEmployeeRequestHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
@@ -24,8 +22,14 @@ namespace application.cqrs.Employee.Commands
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 EmployeeNumber = request.EmployeeNumber,
-                IsActive =true
+                IsActive =true,
+                CompanyEmail = request.CompanyEmail,
+                PersonalEmail = request.PersonalEmail,
             };
+
+            dbContext.Employees.Add(employee);
+
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return new CreateEmployeeResponse(nameof(Employee), employee.ID);
         }

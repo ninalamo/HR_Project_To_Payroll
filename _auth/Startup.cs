@@ -36,7 +36,7 @@ namespace auth.api
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<AuthDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
@@ -50,7 +50,7 @@ namespace auth.api
                 option.SignIn.RequireConfirmedEmail = true;
             })
                 .AddRoles<IdentityRole>()
-                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                 .AddEntityFrameworkStores<AuthDbContext>()
                  .AddDefaultTokenProviders();
 
             services.AddCors();

@@ -2,6 +2,7 @@
 using auth.api.Data;
 using auth.server.jwt.Models;
 using AutoMapper;
+using lib.common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

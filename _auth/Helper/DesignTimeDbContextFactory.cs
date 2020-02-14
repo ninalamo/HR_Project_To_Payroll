@@ -7,18 +7,18 @@ using System.IO;
 
 namespace auth.repository
 {
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AuthDbContext>
     {
-        public ApplicationDbContext CreateDbContext(string[] args)
+        public AuthDbContext CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
-            var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            var builder = new DbContextOptionsBuilder<AuthDbContext>();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             builder.UseSqlServer(connectionString);
-            return new ApplicationDbContext(builder.Options);
+            return new AuthDbContext(builder.Options);
         }
     }
 }

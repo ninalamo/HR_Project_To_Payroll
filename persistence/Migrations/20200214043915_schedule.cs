@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace persistence.Migrations
+namespace HR.Persistence.Migrations
 {
-    public partial class init : Migration
+    public partial class schedule : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,11 +19,13 @@ namespace persistence.Migrations
                     ModifiedBy = table.Column<string>(nullable: true),
                     EmployeeNumber = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true)
+                    LastName = table.Column<string>(nullable: true),
+                    CompanyEmail = table.Column<string>(nullable: false),
+                    PersonalEmail = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Employees", x => x.ID);
+                    table.PrimaryKey("EmployeeID", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -139,7 +141,7 @@ namespace persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Schedules", x => x.ID);
+                    table.PrimaryKey("ScheduleID", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Schedules_Employees_EmployeeID",
                         column: x => x.EmployeeID,
@@ -171,14 +173,32 @@ namespace persistence.Migrations
                 column: "EmployeeID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Schedules_EmployeeID",
-                table: "Schedules",
-                column: "EmployeeID");
+                name: "IX_Employees_CompanyEmail",
+                table: "Employees",
+                column: "CompanyEmail",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_EmployeeNumber",
+                table: "Employees",
+                column: "EmployeeNumber",
+                unique: true,
+                filter: "[EmployeeNumber] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_FirstName_LastName",
+                table: "Employees",
+                columns: new[] { "FirstName", "LastName" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Schedules_ShiftID",
                 table: "Schedules",
                 column: "ShiftID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Schedules_EmployeeID_ShiftID",
+                table: "Schedules",
+                columns: new[] { "EmployeeID", "ShiftID" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

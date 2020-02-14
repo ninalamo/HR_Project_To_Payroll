@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace auth.api.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    public class AuthDbContext : IdentityDbContext<IdentityUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public AuthDbContext(DbContextOptions<AuthDbContext> options)
             : base(options)
         {
         }
