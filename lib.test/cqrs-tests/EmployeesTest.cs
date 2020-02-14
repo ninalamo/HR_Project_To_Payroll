@@ -98,6 +98,25 @@ namespace lib.test.cqrs_tests
 
         }
 
+        [Fact]
+        public async Task CreateEmployeeBiolog()
+        {
+
+            var createHandler = new CreateBioLogRequestHandler(_context, _mapper);
+
+            var result = await createHandler.Handle(new CreateBioLogRequest
+            {
+                Email = "sabin.alessa@outlook.com",
+                Lat = 0,
+                Location = "N/A",
+                LogType = domain.BiologType.IN,
+                Long = 0
+            }, CancellationToken.None);
+
+            result.ID.ShouldNotBeNull();
+
+        }
+
 
     }
 }

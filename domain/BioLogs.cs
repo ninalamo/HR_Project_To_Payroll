@@ -10,7 +10,7 @@ namespace domain
         public BiologType LogType { get; set; }
         public double Lat { get; set; }
         public double Long { get; set; }
-        public string Locaton { get; set; }
+        public string Location { get; set; }
         public DateTimeOffset Time { get; set; }
     }
 

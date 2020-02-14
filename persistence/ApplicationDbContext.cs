@@ -2,6 +2,7 @@
 using domain;
 using Microsoft.EntityFrameworkCore;
 using persistence.infrastructure.extensions;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,6 +30,32 @@ namespace persistence
                 new Shift { Start = 800, End = 1700, IsActive = true, ID = 2},
                 new Shift { Start = 830, End = 1730, IsActive = true, ID = 3},
                 new Shift { Start = 900, End = 1800, IsActive = true, ID = 4},
+            });
+
+            Guid id = Guid.Parse("00000000-0000-0000-0000-000000000001");
+
+            modelBuilder.Entity<Employee>().HasData(new[] {
+                new Employee
+                {
+                    FirstName = "Sabin Alessa",
+                    LastName = "Alamo",
+                    ID = id,
+                    CompanyEmail = "sabin.alessa@outlook.com",
+                    PersonalEmail = "sabin.alessa@gmail.com",
+                    EmployeeNumber = "112717",
+                    IsActive = true,
+                }
+            });
+
+            modelBuilder.Entity<EmployeeSchedule>().HasData(new[]
+            {
+                new EmployeeSchedule
+                {
+                    EmployeeID = id,
+                    ShiftID = 3,
+                    IsActive = true,
+                    ID = 1
+                }
             });
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
