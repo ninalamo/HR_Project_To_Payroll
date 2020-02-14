@@ -47,9 +47,9 @@ namespace lib.test.cqrs_tests
         [Fact]
         public async Task DeleteEmployee()
         {
-            var sut = new CreateEmployeeRequestHandler(_context, _mapper);
+            var createHandler = new CreateEmployeeRequestHandler(_context, _mapper);
 
-            var result = await sut.Handle(new CreateEmployeeRequest
+            var result = await createHandler.Handle(new CreateEmployeeRequest
             {
                 CompanyEmail = "nino.alamo@kmc.solutions",
                 EmployeeNumber = "1234",
@@ -61,6 +61,9 @@ namespace lib.test.cqrs_tests
             result.ShouldBeOfType(typeof(CreateEmployeeResponse));
 
             result.Entity.ShouldBe("Employee");
+
+            
+           
         }
 
 

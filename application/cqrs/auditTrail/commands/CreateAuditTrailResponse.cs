@@ -8,6 +8,4 @@ namespace application.cqrs.auditTrail
         {
         }
     }
-
-
 }

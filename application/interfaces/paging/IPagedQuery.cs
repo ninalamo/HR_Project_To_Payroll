@@ -3,11 +3,14 @@ using System.Collections.Generic;
 
 namespace application.interfaces.paging
 {
-    public interface IPagedQuery<Tidentity> where Tidentity : struct
+    public interface IPagedQuery
     {
         int PageNumber { get; set; }
         int PageSize { get; set; }
+        int Total { get; }
 
-        void SetSkipAndTotalCount(out int skip, out int total, IEnumerable<BaseAudit<Tidentity>> list);
+        int GetSkip();
+
+
     }
 }
