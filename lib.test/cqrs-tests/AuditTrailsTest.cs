@@ -43,7 +43,7 @@ namespace lib.test.cqrs_tests
 
             var result = await sut.Handle(new CreateAuditTrailRequest(), CancellationToken.None);
 
-            result.ShouldBeOfType(typeof(CreateAuditTrailRequestHandler))'f'
+            result.ShouldBeOfType(typeof(CreateAuditTrailRequestHandler));
                                                                                                                                                                                                                                                                     
             result.Entity.ShouldBe("AuditTrail");
 
