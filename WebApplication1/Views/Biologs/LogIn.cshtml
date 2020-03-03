@@ -1,0 +1,31 @@
+﻿@{
+    Layout = "_Layout2";
+}
+
+<style>
+    .center {
+        text-align: center;
+      
+    }
+</style>
+<p class="py-5" style="min-height: 130px;"></p>
+<div class="row justify-content-center py-5">
+    <div class="card shadow">
+        <div class="card-header">
+            <h6 class="text-center">Remote Login</h6>
+        </div>
+        <form class="form-signin px-5 center">
+            <img class="mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+            @*<h1 class="h3 mb-3 font-weight-normal">Enter Employee Number</h1>*@
+            <label for="inputEmail" class="sr-only">Employee Number</label>
+            <input type="email" id="employeeid" class="form-control" placeholder="Employee number" required autofocus>
+            <input type="hidden" id="latitude" />
+            <input type="hidden" id="longitude" />
+            <p class="mb-3"></p>
+            <input class="btn btn-sm btn-success btn-block logbutton mb-0" type="submit" id="in" value="Login" />
+            <input class="btn btn-sm btn-outline-danger btn-block logbutton" type="submit" id="out" value="Logout" />
+            <p class="mt-5 mb-3 text-muted">&copy; 2017-2019</p>
+        </form>
+    </div>
+</div>
+

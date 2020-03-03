@@ -6,7 +6,7 @@ namespace HR.Application.cqrs.Employee.Commands
 {
     public class CreateBioLogRequest : IRequest<CreateBioLogResponse>
     {
-        public string Email { get; set; }
+        public string EmployeeNumber { get; set; }
         public BiologType LogType { get; set; }
         public double Lat { get; set; }
         public double Long { get; set; }

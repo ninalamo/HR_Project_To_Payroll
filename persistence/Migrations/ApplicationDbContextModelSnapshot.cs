@@ -15,7 +15,7 @@ namespace HR.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0")
+                .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -84,7 +84,7 @@ namespace HR.Persistence.Migrations
                     b.Property<double>("Lat")
                         .HasColumnType("float");
 
-                    b.Property<string>("Locaton")
+                    b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("LogType")
@@ -217,6 +217,20 @@ namespace HR.Persistence.Migrations
                     b.HasIndex("FirstName", "LastName");
 
                     b.ToTable("Employees");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = new Guid("00000000-0000-0000-0000-000000000001"),
+                            CompanyEmail = "sabin.alessa@outlook.com",
+                            CreatedOn = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EmployeeNumber = "112717",
+                            FirstName = "Sabin Alessa",
+                            IsActive = true,
+                            LastName = "Alamo",
+                            ModifiedOn = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            PersonalEmail = "sabin.alessa@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("domain.EmployeeSchedule", b =>
@@ -255,6 +269,17 @@ namespace HR.Persistence.Migrations
                     b.HasIndex("EmployeeID", "ShiftID");
 
                     b.ToTable("Schedules");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1L,
+                            CreatedOn = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            EmployeeID = new Guid("00000000-0000-0000-0000-000000000001"),
+                            IsActive = true,
+                            ModifiedOn = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            ShiftID = 3L
+                        });
                 });
 
             modelBuilder.Entity("domain.Shift", b =>

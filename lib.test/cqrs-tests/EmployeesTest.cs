@@ -106,7 +106,7 @@ namespace lib.test.cqrs_tests
 
             var result = await createHandler.Handle(new CreateBioLogRequest
             {
-                Email = "sabin.alessa@outlook.com",
+                EmployeeNumber = "sabin.alessa@outlook.com",
                 Lat = 0,
                 Location = "N/A",
                 LogType = domain.BiologType.IN,
