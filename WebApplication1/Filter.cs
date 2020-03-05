@@ -20,7 +20,7 @@ namespace WebApplication1
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 context.Result = new JsonResult(
                     ((ValidationException)context.Exception).Failures);
-
+                context.ModelState.AddModelError("Validation", context.Result.ToString());
                 return;
             }
 
@@ -31,6 +31,7 @@ namespace WebApplication1
                 code = HttpStatusCode.NotFound;
             }
 
+            
             context.HttpContext.Response.ContentType = "application/json";
             context.HttpContext.Response.StatusCode = (int)code;
             context.Result = new JsonResult(new
@@ -38,6 +39,7 @@ namespace WebApplication1
                 error = new[] { context.Exception.Message },
                 stackTrace = context.Exception.StackTrace
             });
+            context.ModelState.AddModelError("Validation", context.Result.ToString());
         }
     }
 }

@@ -35,7 +35,7 @@ namespace application.cqrs._base
         {
             entity.CreatedBy = createdBy;
 
-            if (string.IsNullOrEmpty(modifiedBy))
+            if (!string.IsNullOrEmpty(modifiedBy))
             {
                 entity.ModifiedBy = modifiedBy;
             }

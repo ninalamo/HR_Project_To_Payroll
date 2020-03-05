@@ -7,15 +7,15 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace application.cqrs.Employee.Commands
+namespace HR.Application.cqrs.Employee.Commands
 {
-    public class CreateEmployeeRequestHandler : RequestHandlerBase, IRequestHandler<CreateEmployeeRequest, CreateEmployeeResponse>
+    public class CreateEmployee_RequestHandler : RequestHandlerBase, IRequestHandler<CreateEmployee_Request, CreateEmployee_Response>
     {
-        public CreateEmployeeRequestHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+        public CreateEmployee_RequestHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 
-        public async Task<CreateEmployeeResponse> Handle(CreateEmployeeRequest request, CancellationToken cancellationToken)
+        public async Task<CreateEmployee_Response> Handle(CreateEmployee_Request request, CancellationToken cancellationToken)
         {
             var employee = new domain.Employee
             {
@@ -27,11 +27,13 @@ namespace application.cqrs.Employee.Commands
                 PersonalEmail = request.PersonalEmail,
             };
 
+            Blame(employee, request.CreatedBy);
+
             dbContext.Employees.Add(employee);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            return new CreateEmployeeResponse(nameof(Employee), employee.ID);
+            return new CreateEmployee_Response(nameof(Employee), employee.ID);
         }
     }
 }

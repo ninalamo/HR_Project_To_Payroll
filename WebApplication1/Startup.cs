@@ -7,12 +7,15 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using persistence;
+using System;
 using System.Reflection;
 using WebApplication1.Data;
 
@@ -30,12 +33,31 @@ namespace WebApplication1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+            });
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
 
             // Add AutoMapper
             services.AddAutoMapper(new Assembly[] { typeof(AutoMapperProfile).GetTypeInfo().Assembly });
             services.AddDbContext<IdentityApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("Identity")));
+
+
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<IdentityApplicationDbContext>();
 
@@ -49,7 +71,7 @@ namespace WebApplication1
                 options.UseSqlServer(Configuration.GetConnectionString("Database")));
 
             services
-                .AddMvc(options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))
+                .AddMvc()//options => options.Filters.Add(typeof(CustomExceptionFilterAttribute)))
                 .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddMvcOptions(options => options.EnableEndpointRouting = false)
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetAuditTrailsQueryValidator>());
@@ -79,6 +101,9 @@ namespace WebApplication1
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
+            app.UseCookiePolicy();
 
             app.UseEndpoints(endpoints =>
             {

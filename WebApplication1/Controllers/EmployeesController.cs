@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using domain;
 using persistence;
 using HR.Application.cqrs.Employee.Queries;
+using HR.Application.cqrs.Employee.Commands;
+using WebApplication1.Models.Employees;
 
 namespace WebApplication1.Controllers
 {
@@ -51,32 +53,46 @@ namespace WebApplication1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeNumber,FirstName,LastName,CompanyEmail,PersonalEmail,IsActive,CreatedOn,ModifiedOn,CreatedBy,ModifiedBy,ID")] Employee employee)
+        public async Task<IActionResult> Create([Bind("EmployeeNumber,FirstName,LastName,CompanyEmail,PersonalEmail")] CreateEmployeeViewModel model)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    employee.ID = Guid.NewGuid();
-            //    _context.Add(employee);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            return View(null);
+            if (ModelState.IsValid)
+            {
+                await Mediator.Send(new CreateEmployee_Request {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    EmployeeNumber = model.EmployeeNumber,
+                    CompanyEmail = model.CompanyEmail,
+                    PersonalEmail = model.PersonalEmail,
+                    CreatedBy = "N/A"
+                });
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
         }
 
         // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
+            if (id == null || !id.HasValue)
+            {
+                return NotFound();
+            }
 
-            //var employee = await _context.Employees.FindAsync(id);
-            //if (employee == null)
-            //{
-            //    return NotFound();
-            //}
-            return View(null);
+            var employee = await Mediator.Send(new GetEmployeeByIDRequest { EmployeeID = id.Value });
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            return View(new UpdateEmployeeViewModel { 
+                EmployeeID = employee.EmployeeID,
+                FirstName = employee.FirstName,
+                LastName = employee.LastName,
+                EmployeeNumber = employee.EmployeeNumber,
+                CompanyEmail = employee.CompanyEmail,
+                PersonalEmail = employee.PersonalEmail,
+                ModifiedBy = "N/A",
+                IsActive = employee.IsActive
+            });
         }
 
         // POST: Employees/Edit/5
@@ -84,35 +100,41 @@ namespace WebApplication1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("EmployeeNumber,FirstName,LastName,CompanyEmail,PersonalEmail,IsActive,CreatedOn,ModifiedOn,CreatedBy,ModifiedBy,ID")] Employee employee)
+        public async Task<IActionResult> Edit(Guid id, [Bind("EmployeeNumber,FirstName,LastName,CompanyEmail,PersonalEmail,IsActive,EmployeeID")] UpdateEmployeeViewModel model)
         {
-            //if (id != employee.ID)
-            //{
-            //    return NotFound();
-            //}
+            if (id != model.EmployeeID)
+            {
+                return NotFound();
+            }
 
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-            //        _context.Update(employee);
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!EmployeeExists(employee.ID))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(employee);
-            return View(null);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await Mediator.Send(new UpdateEmployee_Request {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        EmployeeNumber = model.EmployeeNumber,
+                        CompanyEmail = model.CompanyEmail,
+                        PersonalEmail = model.PersonalEmail,
+                        ModifiedBy = "N/A",
+                        IsActive = model.IsActive
+                    });
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EmployeeExists(model.EmployeeID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
         }
 
         // GET: Employees/Delete/5
@@ -146,8 +168,8 @@ namespace WebApplication1.Controllers
 
         private bool EmployeeExists(Guid id)
         {
-            return false;
-            //return _context.Employees.Any(e => e.ID == id);
+            return Mediator.Send(new GetEmployeesRequest()).Result.Data.Any(i => i.EmployeeID == id);
+             
         }
     }
 }

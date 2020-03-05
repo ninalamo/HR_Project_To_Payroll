@@ -21,7 +21,7 @@ namespace HR.Application.cqrs.Employee.Commands
 
         public async Task<CreateBioLogResponse> Handle(CreateBioLogRequest request, CancellationToken cancellationToken)
         {
-            var employee = await dbContext.Employees.FirstOrDefaultAsync(i => i.CompanyEmail.ToLower() == request.EmployeeNumber.ToLower());
+            var employee = await dbContext.Employees.FirstOrDefaultAsync(i => i.EmployeeNumber.ToLower() == request.EmployeeNumber.ToLower());
 
             if (employee == null) throw new NotFoundException(nameof(domain.Employee), request.EmployeeNumber);
 
@@ -35,6 +35,8 @@ namespace HR.Application.cqrs.Employee.Commands
                 Location = request.Location,
 
             };
+
+            Blame(bio, employee.CompanyEmail, employee.CompanyEmail);
 
             dbContext.RawLogs.Add(bio);
 

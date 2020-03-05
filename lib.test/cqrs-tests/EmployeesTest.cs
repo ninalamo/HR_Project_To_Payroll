@@ -1,15 +1,10 @@
-﻿using application.cqrs.auditTrail;
-using application.cqrs.auditTrail.commands;
-using application.cqrs.auditTrail.queries;
-using application.cqrs.Employee.Commands;
-using AutoMapper;
+﻿using AutoMapper;
 using HR.Application.cqrs.Employee.Commands;
 using HR.Application.cqrs.Employee.Queries;
 using lib.test.infrastructure;
 using persistence;
 using Shouldly;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -48,9 +43,9 @@ namespace lib.test.cqrs_tests
         [Fact]
         public async Task CreateEmployee()
         {
-            var sut = new CreateEmployeeRequestHandler(_context, _mapper);
+            var sut = new CreateEmployee_RequestHandler(_context, _mapper);
 
-            var result = await sut.Handle(new CreateEmployeeRequest {
+            var result = await sut.Handle(new CreateEmployee_Request {
                 CompanyEmail = "nino.alamo@kmc.solutions",
                 EmployeeNumber = "1234",
                 FirstName = "Nin",
@@ -58,7 +53,7 @@ namespace lib.test.cqrs_tests
                 PersonalEmail = "janinejams@gmail.com",
             }, CancellationToken.None);
 
-            result.ShouldBeOfType(typeof(CreateEmployeeResponse));
+            result.ShouldBeOfType(typeof(CreateEmployee_Response));
                                                                                         
             result.Entity.ShouldBe("Employee");
         }
@@ -66,9 +61,9 @@ namespace lib.test.cqrs_tests
         [Fact]
         public async Task GetEmployeeByID()
         {
-            var sut = new CreateEmployeeRequestHandler(_context, _mapper);
+            var sut = new CreateEmployee_RequestHandler(_context, _mapper);
 
-            var result = await sut.Handle(new CreateEmployeeRequest
+            var result = await sut.Handle(new CreateEmployee_Request
             {
                 CompanyEmail = "nino.alamo@kmc.solutions",
                 EmployeeNumber = "1234",
@@ -77,7 +72,7 @@ namespace lib.test.cqrs_tests
                 PersonalEmail = "janinejams@gmail.com",
             }, CancellationToken.None);
 
-            result.ShouldBeOfType(typeof(CreateEmployeeResponse));
+            result.ShouldBeOfType(typeof(CreateEmployee_Response));
 
             result.Entity.ShouldBe("Employee");
         }

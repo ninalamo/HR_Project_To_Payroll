@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using application.cqrs._base;
+using MediatR;
 
-namespace application.cqrs.Employee.Commands
+namespace HR.Application.cqrs.Employee.Commands
 {
-    public class CreateEmployeeRequest : IRequest<CreateEmployeeResponse>
+    public class CreateEmployee_Request : CreditableBase, IRequest<CreateEmployee_Response>
     {
         public string EmployeeNumber { get; set; }
         public string FirstName { get; set; }

@@ -5,15 +5,13 @@ var longitude = 0;
 // Write your JavaScript code.
 $(document).ready(function () {
     
-
-
        getLocation();
 
         $(".logbutton").on("click", function (e) {
             e.preventDefault();
 
             $('#latitude').val(latitude);
-            console.log('#latidude (' + latitude);
+           
             $('#longitude').val(longitude);
 
             var id = this.id;
@@ -42,10 +40,12 @@ $(document).ready(function () {
                 async: true,
                 processData: false
             });
+
+            $('#employeeid').val('');
         });
 
+      
      
-
     });
 
 function getLocation() {

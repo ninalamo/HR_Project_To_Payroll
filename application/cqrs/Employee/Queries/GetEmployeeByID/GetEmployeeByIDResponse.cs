@@ -13,6 +13,7 @@ namespace HR.Application.cqrs.Employee.Queries
         public string LastName { get; set; }
         public string CompanyEmail { get; set; }
         public string PersonalEmail { get; set; }
+        public bool IsActive { get; set; }
 
         private static readonly Expression<Func<domain.Employee, GetEmployeeByIDResponse>> Projection = (e) =>
         new GetEmployeeByIDResponse
@@ -23,7 +24,7 @@ namespace HR.Application.cqrs.Employee.Queries
                 LastName = e.LastName,
                 PersonalEmail = e.PersonalEmail,
                 EmployeeID = e.ID,
-                 
+                IsActive = e.IsActive
         };
     
         public static GetEmployeeByIDResponse Create(domain.Employee e) => Projection.Compile().Invoke(e);

@@ -1,4 +1,4 @@
-﻿@model domain.Employee
+﻿@model UpdateEmployeeViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -8,7 +8,7 @@
 
 <h4>Employee</h4>
 <hr />
-<div class="row">
+<div class="row justify-content-center p-5">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -42,37 +42,19 @@
                     <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
                 </label>
             </div>
+           
+            <input type="hidden" asp-for="EmployeeID" />
             <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedOn" class="control-label"></label>
-                <input asp-for="ModifiedOn" class="form-control" />
-                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedBy" class="control-label"></label>
-                <input asp-for="CreatedBy" class="form-control" />
-                <span asp-validation-for="CreatedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="ID" />
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <div class="btn-group btn-block" role="group" aria-label="Basic example">
+                    <input type="submit" value="Save" class="btn btn-outline-success" />
+                    <a class="btn btn-danger" asp-action="Index">Back</a>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
