@@ -10,6 +10,7 @@ using persistence;
 using HR.Application.cqrs.Employee.Queries;
 using HR.Application.cqrs.Employee.Commands;
 using WebApplication1.Models.Employees;
+using WebApplication1.Extensions;
 
 namespace WebApplication1.Controllers
 {
@@ -118,7 +119,8 @@ namespace WebApplication1.Controllers
                         CompanyEmail = model.CompanyEmail,
                         PersonalEmail = model.PersonalEmail,
                         ModifiedBy = "N/A",
-                        IsActive = model.IsActive
+                        IsActive = model.IsActive,
+                        EmployeeID = model.EmployeeID
                     });
                 }
                 catch (DbUpdateConcurrencyException)
@@ -140,19 +142,29 @@ namespace WebApplication1.Controllers
         // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            //var employee = await _context.Employees
-            //    .FirstOrDefaultAsync(m => m.ID == id);
-            //if (employee == null)
-            //{
-            //    return NotFound();
-            //}
+            var response = await Mediator.Send(new GetEmployeeByIDRequest { EmployeeID = id.Value });
 
-            return View(null);
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            
+
+            return View(new DeleteEmployeeViewModel {
+                FirstName = response.FirstName,
+                LastName = response.LastName,
+                EmployeeNumber = response.EmployeeNumber,
+                CompanyEmail = response.CompanyEmail,
+                PersonalEmail = response.PersonalEmail,
+                ModifiedBy = "N/A",
+                IsActive = response.IsActive
+            });
         }
 
         // POST: Employees/Delete/5
@@ -160,10 +172,8 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            //var employee = await _context.Employees.FindAsync(id);
-            //_context.Employees.Remove(employee);
-            //await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            await Mediator.Send(new DeleteEmployeeRequest { EmployeeID = id });
+            return RedirectToAction(nameof(Index)).WithInfo("Prompt", "Successfully removed.");
         }
 
         private bool EmployeeExists(Guid id)

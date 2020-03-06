@@ -1,81 +1,73 @@
-﻿@model domain.Employee
+﻿@model DeleteEmployeeViewModel
 
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Employee</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EmployeeNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EmployeeNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompanyEmail)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompanyEmail)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PersonalEmail)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PersonalEmail)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsActive)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsActive)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedOn)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedOn)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedBy)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedBy)
-        </dd>
-    </dl>
-    
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="ID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+
+<div class="">
+    <div class="row justify-content-center p-5">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h6>Are you sure you want to delete this?</h6>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="row">
+                        <strong class="col-sm-6">
+                            @Html.DisplayNameFor(model => model.EmployeeNumber)
+                        </strong>
+                        <small class="col-sm-6">
+                            @Html.DisplayFor(model => model.EmployeeNumber)
+                        </small>
+                        <strong class="col-sm-6">
+                            @Html.DisplayNameFor(model => model.FirstName)
+                        </strong>
+                        <small class="col-sm-6">
+                            @Html.DisplayFor(model => model.FirstName)
+                        </small>
+                        <strong class="col-sm-6">
+                            @Html.DisplayNameFor(model => model.LastName)
+                        </strong>
+                        <small class="col-sm-6">
+                            @Html.DisplayFor(model => model.LastName)
+                        </small>
+                        <strong class="col-sm-6">
+                            @Html.DisplayNameFor(model => model.CompanyEmail)
+                        </strong>
+                        <small class="col-sm-6">
+                            @Html.DisplayFor(model => model.CompanyEmail)
+                        </small>
+                        <strong class="col-sm-6">
+                            @Html.DisplayNameFor(model => model.PersonalEmail)
+                        </strong>
+                        <small class="col-sm-6">
+                            @Html.DisplayFor(model => model.PersonalEmail)
+                        </small>
+                        <strong class="col-sm-6">
+                            @Html.DisplayNameFor(model => model.IsActive)
+                        </strong>
+                        <small class="col-sm-6">
+                            @Html.DisplayFor(model => model.IsActive)
+                        </small>
+
+                    </div>
+                    <hr />
+                    <form asp-action="Delete">
+                        <input type="hidden" asp-for="EmployeeID" />
+                        <div class="form-group">
+                            <div class="btn-group btn-block" role="group" aria-label="Basic example">
+                                <input type="submit" value="Remove" class="btn btn-outline-success" />
+                                <a class="btn btn-secondary" asp-action="Index">Back</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 </div>

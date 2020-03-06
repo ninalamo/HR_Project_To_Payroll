@@ -18,7 +18,7 @@ namespace HR.Application.cqrs.Employee.Commands
 
         public async Task<UpdateEmployee_Response> Handle(UpdateEmployee_Request request, CancellationToken cancellationToken)
         {
-            var employee = await dbContext.Employees.FindAsync(request.PersonID);
+            var employee = await dbContext.Employees.FindAsync(request.EmployeeID);
             employee.EmployeeNumber = request.EmployeeNumber;
             employee.CompanyEmail = request.CompanyEmail;
             employee.PersonalEmail = request.PersonalEmail;
@@ -28,6 +28,8 @@ namespace HR.Application.cqrs.Employee.Commands
             Blame(employee, employee.CreatedBy, request.ModifiedBy);
 
             dbContext.Employees.Update(employee);
+
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             return new UpdateEmployee_Response(nameof(domain.Employee), employee.ID);
 
