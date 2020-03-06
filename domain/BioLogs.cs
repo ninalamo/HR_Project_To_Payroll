@@ -12,6 +12,7 @@ namespace domain
         public double Long { get; set; }
         public string Location { get; set; }
         public DateTimeOffset Time { get; set; }
+        public Employee Employee { get; set; }
     }
 
     public enum BiologType : int

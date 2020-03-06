@@ -1,16 +1,14 @@
-﻿using System;
+﻿using HR.Application.cqrs.Employee.Commands;
+using HR.Application.cqrs.Employee.Queries;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using domain;
-using persistence;
-using HR.Application.cqrs.Employee.Queries;
-using HR.Application.cqrs.Employee.Commands;
-using WebApplication1.Models.Employees;
 using WebApplication1.Extensions;
+using WebApplication1.Models.Biologs;
+using WebApplication1.Models.Employees;
 
 namespace WebApplication1.Controllers
 {
@@ -24,6 +22,38 @@ namespace WebApplication1.Controllers
             return View(result);
         }
 
+        public IActionResult DailyTimeRecord()
+        {
+            ViewData["DTR"] = new List<DailyTimeRecordResponseViewModel>();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DailyTimeRecord(DailyTimeRecordRequestViewModel request)
+        {
+            try
+            {
+                var response = await Mediator.Send(new GetEmployeeBiologsByDateRange_Request { Date1 = request.Date1.Date, Date2 = request.Date2 });
+                var dtr = response.EmployeeTimeRecords.Select(i => new DailyTimeRecordResponseViewModel
+                {
+                    EmployeeNumber = i.EmployeeNumber,
+                    FullName = i.FullName,
+                    Lat = i.Lat,
+                    Long = i.Long,
+                    Mode = i.Mode,
+                    Time = i.Time
+                }).ToList();
+
+                ViewData["DTR"] = dtr;
+
+                return View(request);
+            }catch(ArgumentOutOfRangeException argException)
+            {
+
+            }
+            ViewData["DTR"] = new List<DailyTimeRecordResponseViewModel>();
+            return View(new DailyTimeRecordRequestViewModel { Date1 = DateTimeOffset.Now, Date2 = DateTimeOffset.Now });
+        }
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -43,6 +73,7 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        #region CRUD
         // GET: Employees/Create
         public IActionResult Create()
         {
@@ -175,6 +206,10 @@ namespace WebApplication1.Controllers
             await Mediator.Send(new DeleteEmployeeRequest { EmployeeID = id });
             return RedirectToAction(nameof(Index)).WithInfo("Prompt", "Successfully removed.");
         }
+
+        #endregion
+
+
 
         private bool EmployeeExists(Guid id)
         {
