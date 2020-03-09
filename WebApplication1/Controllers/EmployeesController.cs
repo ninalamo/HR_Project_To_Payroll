@@ -1,6 +1,7 @@
 ﻿using HR.Application.cqrs.Employee.Commands;
 using HR.Application.cqrs.Employee.Queries;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace WebApplication1.Controllers
 {
     public class EmployeesController : BaseController
     {
-        
+
         // GET: Employees
         public async Task<IActionResult> Index()
         {
@@ -22,8 +23,15 @@ namespace WebApplication1.Controllers
             return View(result);
         }
 
-        public IActionResult DailyTimeRecord()
-        {
+        public IActionResult DailyTimeRecord(Guid id)
+        { 
+
+            var employee = Mediator.Send(new GetEmployeeByIDRequest{ EmployeeID = id}).Result;
+            if (employee == null) return RedirectToAction(nameof(Index)).WithWarning("Error", "Invalid ID");
+
+            ViewData["EmployeeID"] = employee.EmployeeID;
+            ViewData["FullName"] = employee.FullName;
+            ViewData["EmployeeNumber"] = employee.EmployeeNumber;
             ViewData["DTR"] = new List<DailyTimeRecordResponseViewModel>();
             return View();
         }
@@ -33,7 +41,8 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                var response = await Mediator.Send(new GetEmployeeBiologsByDateRange_Request { Date1 = request.Date1.Date, Date2 = request.Date2 });
+                var response = await Mediator.Send(new GetEmployeeBiologsByDateRange_Request { Date1 = request.Date1.Date, Date2 = request.Date2, EmployeeID = request.EmployeeID });
+
                 var dtr = response.EmployeeTimeRecords.Select(i => new DailyTimeRecordResponseViewModel
                 {
                     EmployeeNumber = i.EmployeeNumber,
@@ -41,18 +50,29 @@ namespace WebApplication1.Controllers
                     Lat = i.Lat,
                     Long = i.Long,
                     Mode = i.Mode,
-                    Time = i.Time
+                    Time = i.Time,
+                    Location = i.Location
                 }).ToList();
 
+                ViewData["EmployeeID"] = request.EmployeeID;
+                ViewData["FullName"] = request.FullName;
+                ViewData["EmployeeNumber"] = request.EmployeeNumber;
                 ViewData["DTR"] = dtr;
 
-                return View(request);
-            }catch(ArgumentOutOfRangeException argException)
+                return View(request).WithSuccess("Success", "Showing logs for DTR");
+            }catch(Exception ex)
             {
-
+              
             }
+            var employee = Mediator.Send(new GetEmployeeByIDRequest { EmployeeID = request.EmployeeID }).Result;
+            if (employee == null) return RedirectToAction(nameof(Index)).WithWarning("Error", "Invalid ID");
+
+            ViewData["EmployeeID"] = employee.EmployeeID;
+            ViewData["FullName"] = employee.FullName;
+            ViewData["EmployeeNumber"] = employee.EmployeeNumber;
             ViewData["DTR"] = new List<DailyTimeRecordResponseViewModel>();
-            return View(new DailyTimeRecordRequestViewModel { Date1 = DateTimeOffset.Now, Date2 = DateTimeOffset.Now });
+
+            return View(request).WithWarning("Warning", "Something's off.");
         }
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -89,15 +109,28 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                await Mediator.Send(new CreateEmployee_Request {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    EmployeeNumber = model.EmployeeNumber,
-                    CompanyEmail = model.CompanyEmail,
-                    PersonalEmail = model.PersonalEmail,
-                    CreatedBy = "N/A"
-                });
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await Mediator.Send(new CreateEmployee_Request
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        EmployeeNumber = model.EmployeeNumber,
+                        CompanyEmail = model.CompanyEmail,
+                        PersonalEmail = model.PersonalEmail,
+                        CreatedBy = "N/A"
+                    });
+                    return RedirectToAction(nameof(Index));
+                }catch(SqlException ex)
+                {
+                    return View(model).WithDanger("Duplicate key", ex.InnerException == null ? ex.Message : $"{ex.InnerException.Message}. {ex.Message}");
+                }catch(DbUpdateException ex)
+                {
+                    return View(model).WithDanger(nameof(DbUpdateException), "Duplicate key value found in the request. Please check required unique key values. Example Email(s) or Name(s) or Employee Number(s)");
+                }catch(Exception ex)
+                {
+                    return View(model).WithDanger(ex.GetType().ToString(), ex.Message);
+                }
             }
             return View(model);
         }
@@ -164,6 +197,14 @@ namespace WebApplication1.Controllers
                     {
                         throw;
                     }
+                }
+                catch (DbUpdateException)
+                {
+                    return View(model).WithDanger(nameof(DbUpdateException), "Duplicate key value found in the request. Please check required unique key values. Example Email(s) or Name(s) or Employee Number(s)");
+                }
+                catch (Exception ex)
+                {
+                    return View(model).WithDanger(ex.GetType().ToString(), ex.Message);
                 }
                 return RedirectToAction(nameof(Index));
             }

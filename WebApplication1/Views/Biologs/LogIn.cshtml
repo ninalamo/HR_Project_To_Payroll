@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "_Layout2";
+    ViewData["Title"] = "Login";
 }
 
 <style>
@@ -16,7 +17,7 @@
             </div>
             <form class="form-signin p-5 center">
                 <label for="employeeid" class="sr-only">Employee Number</label>
-                <input type="email" id="employeeid" class="form-control text-center" placeholder="Employee Number" required autofocus>
+                <input type="tel" id="employeeid" class="form-control text-center" placeholder="Employee Number" required autofocus>
                 <input type="hidden" id="latitude" />
                 <input type="hidden" id="longitude" />
                 <p class="mb-3"></p>
@@ -28,3 +29,7 @@
     </div>
 </div>
 
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

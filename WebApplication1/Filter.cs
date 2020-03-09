@@ -21,6 +21,7 @@ namespace WebApplication1
                 context.Result = new JsonResult(
                     ((ValidationException)context.Exception).Failures);
                 context.ModelState.AddModelError("Validation", context.Result.ToString());
+                
                 return;
             }
 

@@ -11,6 +11,7 @@ namespace HR.Application.cqrs.Employee.Queries
         public string EmployeeNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FullName { get; set; }
         public string CompanyEmail { get; set; }
         public string PersonalEmail { get; set; }
         public bool IsActive { get; set; }
@@ -24,7 +25,8 @@ namespace HR.Application.cqrs.Employee.Queries
                 LastName = e.LastName,
                 PersonalEmail = e.PersonalEmail,
                 EmployeeID = e.ID,
-                IsActive = e.IsActive
+                IsActive = e.IsActive,
+                FullName = $"{e.LastName}, {e.FirstName}"
         };
     
         public static GetEmployeeByIDResponse Create(domain.Employee e) => Projection.Compile().Invoke(e);

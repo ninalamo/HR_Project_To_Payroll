@@ -5,6 +5,7 @@ using AutoMapper;
 using domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OpenCage.Geocode;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,6 +26,9 @@ namespace HR.Application.cqrs.Employee.Commands
 
             if (employee == null) throw new NotFoundException(nameof(domain.Employee), request.EmployeeNumber);
 
+
+            var geoCoder = new Geocoder("271460ae98bf4e2baae91c779d36992b");
+            var result = await geoCoder.ReverseGeocodeAsync(request.Lat, request.Long);
             var bio = new BioLog
             {
                 Lat = request.Lat,
@@ -32,7 +36,7 @@ namespace HR.Application.cqrs.Employee.Commands
                 EmployeeID = employee.ID,
                 LogType = request.LogType,
                 Time = DateTimeOffset.Now,
-                Location = request.Location,
+                Location = result.Results.Length != 0 ? result.Results[0].Formatted : "n/a",
 
             };
 

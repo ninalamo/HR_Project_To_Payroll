@@ -5,10 +5,23 @@ var longitude = 0;
 // Write your JavaScript code.
 $(document).ready(function () {
     
-       getLocation();
+    getLocation();
+
+
+    $('#employee').DataTable();
+
+
+    $('#dtr').DataTable({
+            dom: 'Bfrtip',
+         pageinfo: "true",
+         buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
 
         $(".logbutton").on("click", function (e) {
-            e.preventDefault();
+            e.preventDefault(); 
+
 
             $('#latitude').val(latitude);
            

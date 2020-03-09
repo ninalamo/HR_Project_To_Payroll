@@ -4,6 +4,7 @@ using AutoMapper;
 using domain;
 using MediatR;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace HR.Application.cqrs.Employee.Commands
 
         public async Task<CreateEmployee_Response> Handle(CreateEmployee_Request request, CancellationToken cancellationToken)
         {
+            
             var employee = new domain.Employee
             {
                 FirstName = request.FirstName,

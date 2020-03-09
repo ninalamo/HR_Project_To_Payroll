@@ -1,18 +1,17 @@
-﻿@{
-
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Remote Login</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/datatable/datatables.min.css" rel="stylesheet" />
+
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body>
+<body oncontextmenu="return false">
     <header>
-        @*<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container">
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Remote Login</a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -21,7 +20,7 @@
                     </button>
 
                 </div>
-            </nav>*@
+            </nav>
     </header>
     <div class="container">
 
@@ -40,9 +39,18 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/datatable/datatables.min.js"></script>
+
+    <script src="~/lib/datatable/Buttons-1.6.1/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/lib/datatable/Buttons-1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="~/lib/datatable/Buttons-1.6.1/js/buttons.flash.min.js"></script>
+    <script src="~/lib/datatable/JSZip-2.5.0/jszip.min.js"></script>
+
+    <script src="~/lib/datatable/pdfmake-0.1.36/pdfmake.min.js"></script>
+    <script src="~/lib/datatable/pdfmake-0.1.36/vfs_fonts.js"></script>
+    <script src="~/lib/datatable/Buttons-1.6.1/js/buttons.html5.min.js"></script>
+    <script src="~/lib/datatable/Buttons-1.6.1/js/buttons.print.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

@@ -24,6 +24,7 @@ namespace HR.Application.cqrs.Employee.Commands
             employee.PersonalEmail = request.PersonalEmail;
             employee.FirstName = request.FirstName;
             employee.LastName = request.LastName;
+            employee.IsActive = request.IsActive;
 
             Blame(employee, employee.CreatedBy, request.ModifiedBy);
 

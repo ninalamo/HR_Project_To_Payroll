@@ -7,12 +7,12 @@
 <p>
     <a class="btn btn-sm btn-outline-success" asp-action="Create">Create New</a>
 </p>
-<div class="card">
+<div class="card shadow">
     <div class="card-header bg-success text-white">
         <h6>Employee List</h6>
     </div>
     <div class="card-body">
-        <table class="table table-striped table-borderless">
+        <table class="table table-striped table-borderless" id="employee">
         <thead>
             <tr>
                 <th>
@@ -22,7 +22,7 @@
                     First Name
                 </th>
                 <th>
-                    LastName
+                    Last Name
                 </th>
                 <th>
                     Company Email
@@ -54,7 +54,7 @@
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.EmployeeID">Edit</a> |
-                        @*<a asp-action="Details" asp-route-id="@item.EmployeeID">Details</a>*@ 
+                        <a asp-action="DailyTimeRecord" asp-route-id="@item.EmployeeID">DTR</a> |
                         <a asp-action="Delete" asp-route-id="@item.EmployeeID">Remove</a>
                     </td>
                 </tr>

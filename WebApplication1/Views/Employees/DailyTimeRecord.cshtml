@@ -2,34 +2,43 @@
 
 @{
     ViewData["Title"] = "DailyTimeRecord";
+    var employeeID = ViewData["EmployeeID"];
+
     var records = ViewData["DTR"] as ICollection<WebApplication1.Models.Biologs.DailyTimeRecordResponseViewModel>;
 }
 
-<p>
-    <a class="btn btn-sm btn-outline-success" asp-action="Create">Create New</a>
-</p>
+
 <div class="card">
     <div class="card-header bg-success text-white">
-        <h6>DTR Logs</h6>
+       <h6>Time Logs</h6>
     </div>
-    <div class="card-body">
+    <div class="card-body shadow">
         <form asp-action="DailyTimeRecord" class="row">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group col-md-5 col-sm-12 order-0">
-                <input type="date" asp-for="Date1"  class="form-control" />
-                <span asp-validation-for="Date1"   class="text-danger"></span>
-
-              
+                <input type="date" asp-for="Date1" class="form-control" />
+                <span asp-validation-for="Date1" class="text-danger"></span>
             </div>
             <div class="form-group col-md-5 col-sm-12 order-1">
                 <input type="date" asp-for="Date2" class="form-control" />
                 <span asp-validation-for="Date2" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="EmployeeID" value="@ViewData["EmployeeID"]" />
+            <input type="hidden" asp-for="EmployeeNumber" value="@ViewData["FullName"]" />
             <div class="form-group col-md-2 col-sm-12 order-2">
                 <input type="submit" value="Search" class="btn btn-block btn-sm btn-outline-success" />
             </div>
         </form>
-            <table class="table table-striped table-borderless">
+        <hr />
+        @if (records.Count() == 0)
+        {
+            <div class="text-center">
+                <p class="">Nothing here.</p>
+            </div>
+        }
+        else
+        {
+            <table class="table table-striped table-borderless" id="dtr">
                 <thead>
                     <tr>
                         <th>
@@ -45,11 +54,9 @@
                             In / Out Mode
                         </th>
                         <th>
-                            Latitude
+                            Location
                         </th>
-                        <th>
-                            Longitude
-                        </th>
+                       
                         <th></th>
                     </tr>
                 </thead>
@@ -70,19 +77,19 @@
                                 @Html.DisplayFor(modelItem => item.Mode)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Lat)
+                                @Html.DisplayFor(modelItem => item.Location)
                             </td>
+                           
                             <td>
-                                @Html.DisplayFor(modelItem => item.Long)
-                            </td>
-                            <td>
-                                @*<a asp-action="Edit" asp-route-id="@item.EmployeeID">Update</a> |
-                                <a asp-action="Delete" asp-route-id="@item.EmployeeID">Remove</a>*@
-                            </td>
+                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+        }
+        <div class="card-footer">
+            <small>@DateTime.Now</small>
+        </div>
     </div>
 </div>
 

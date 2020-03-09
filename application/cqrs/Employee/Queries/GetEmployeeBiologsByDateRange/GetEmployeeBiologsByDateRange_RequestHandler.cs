@@ -22,31 +22,16 @@ namespace HR.Application.cqrs.Employee.Queries
 
         public async Task<GetEmployeeBiologsByDateRange_Response> Handle(GetEmployeeBiologsByDateRange_Request request, CancellationToken cancellationToken)
         {
-            var timeInRecords = new List<TimeRecord>();
-
-            if (request.Date1.Date == request.Date2.Date)
-            {
-                timeInRecords = await dbContext.RawLogs.Include(i => i.Employee)
-                .Where(i => request.Date1.Date == i.Time.Date)// || (request.Date1.AddDays(1).Date == i.Time.Date && i.LogType == domain.BiologType.OUT))
-                .OrderBy(i => i.CreatedOn).ThenBy(i => i.Employee.LastName).ThenBy(i => i.Employee.LastName)
-                .Select(i => new TimeRecord
-                {
-                    FullName = $"{i.Employee.FirstName}, {i.Employee.LastName}",
-                    EmployeeNumber = i.Employee.EmployeeNumber,
-                    Time = i.Time.ToString("MMM dd yyyy hh:mm tt"),
-                    Mode = i.LogType.ToString().ToUpper(),
-                    Lat = i.Lat,
-                    Long = i.Long,
-                })
-                .AsNoTracking()
-                .ToListAsync();
-            }
-            else
-            {
-                timeInRecords = await dbContext.RawLogs.Include(i => i.Employee)
-                    .Where(i => (request.Date1.Date <= i.Time.Date || request.Date2.Date >= i.Time.Date)
-                        ||(i.Time.Date > request.Date2.Date && i.LogType == domain.BiologType.OUT)
-                        )
+                      
+           
+                var timeInRecords = await dbContext.RawLogs
+                    .Include(i => i.Employee)
+                    .Where(i => (
+                        (i.Time.Date >= request.Date1.Date && i.Time.Date <= request.Date2.Date) 
+                            ||(i.Time.Date == request.Date2.AddDays(1).Date && i.LogType == domain.BiologType.OUT)
+                            || (i.Time.Date == request.Date1.AddDays(-1).Date && i.LogType == domain.BiologType.IN))
+                       && i.EmployeeID == request.EmployeeID 
+                       )
                     .OrderBy(i => i.CreatedOn).ThenBy(i => i.Employee.LastName).ThenBy(i => i.Employee.LastName)
                     .Select(i => new TimeRecord
                     {
@@ -56,10 +41,13 @@ namespace HR.Application.cqrs.Employee.Queries
                         Mode = i.LogType.ToString().ToUpper(),
                         Lat = i.Lat,
                         Long = i.Long,
+                        Location = i.Location
                     })
                     .AsNoTracking()
                     .ToListAsync();
-            }
+
+            
+            
             return new GetEmployeeBiologsByDateRange_Response { EmployeeTimeRecords = timeInRecords };
 
         }
@@ -73,6 +61,6 @@ namespace HR.Application.cqrs.Employee.Queries
         public string Mode { get; set; }
         public double Lat { get; set; }
         public double Long { get; set; }
-
+        public string Location { get; set; }
     }
 }
