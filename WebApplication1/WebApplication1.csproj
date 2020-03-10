@@ -7,7 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\js\demo\**" />
+    <Content Remove="wwwroot\js\demo\**" />
+    <EmbeddedResource Remove="wwwroot\js\demo\**" />
+    <None Remove="wwwroot\js\demo\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Filter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="bundleconfig.json" />
   </ItemGroup>
 
 
@@ -39,6 +50,11 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\datatable\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="bundleconfig.json" />
   </ItemGroup>
 
 </Project>

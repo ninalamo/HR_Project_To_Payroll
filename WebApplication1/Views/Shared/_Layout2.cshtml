@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,32 +9,29 @@
 
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body oncontextmenu="return false">
+<body >
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                 <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Remote Login</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
+                   
 
                 </div>
             </nav>
     </header>
     <div class="container">
 
-
-        <p class="py-5" style="min-height: 130px;">
-            @await Html.PartialAsync("_StatusMessage")
-        </p>
-
-
-        @RenderBody()
+        <main role="main" class="pb-3">
+            @try
+            {
+                @await Html.PartialAsync("_StatusMessage")
+            }
+            catch { }
+            @RenderBody()
+        </main>
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
+        <div class="container text-center">
             &copy; 2020 - Remote Login - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>

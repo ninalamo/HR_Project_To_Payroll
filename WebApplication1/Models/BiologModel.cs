@@ -18,4 +18,11 @@ namespace WebApplication1.Models
         [MinLength(2)]
         public string InOrOut { get; set; }
     }
+
+    public class LoginMode
+    {
+        [MaxLength(3)]
+        [MinLength(2)]
+        public string InOrOut { get; set; }
+    }
 }

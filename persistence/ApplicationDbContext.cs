@@ -21,6 +21,9 @@ namespace persistence
         public DbSet<BioLog> RawLogs { get; set; }
         public DbSet<Shift> Shifts { get; set; }
         public DbSet<ConsolidatedBioLog> ConsolidatedTimeSheets { get; set; }
+        public DbSet<Request> Requests { get; set; }
+        public DbSet<Approver> Approvers { get; set; }
+        public DbSet<RequestApprover> RequestApprovers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

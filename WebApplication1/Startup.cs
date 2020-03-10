@@ -54,11 +54,14 @@ namespace WebApplication1
             // Add AutoMapper
             services.AddAutoMapper(new Assembly[] { typeof(AutoMapperProfile).GetTypeInfo().Assembly });
             services.AddDbContext<IdentityApplicationDbContext>(options =>
+               
                 options.UseSqlServer(
                     Configuration.GetConnectionString("Identity")));
 
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => 
+            options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<IdentityApplicationDbContext>();
 
             // Add MediatR
@@ -110,6 +113,9 @@ namespace WebApplication1
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
             });
         }

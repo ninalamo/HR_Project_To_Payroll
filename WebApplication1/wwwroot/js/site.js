@@ -8,16 +8,16 @@ $(document).ready(function () {
     getLocation();
 
 
-    $('#employee').DataTable();
+        $('#employee').DataTable();
 
 
-    $('#dtr').DataTable({
-            dom: 'Bfrtip',
-         pageinfo: "true",
-         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-    });
+        $('#dtr').DataTable({
+                dom: 'Bfrtip',
+             pageinfo: "true",
+             buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
 
         $(".logbutton").on("click", function (e) {
             e.preventDefault(); 
@@ -45,11 +45,12 @@ $(document).ready(function () {
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
                 error: function (xhr) {
-                   // alert('Error: ' + xhr.statusText);
+                   
                 },
                 success: function (result) {
-                    //CheckIfInvoiceFound(result);
+                    alert("Success.");
                 },
+                
                 async: true,
                 processData: false
             });

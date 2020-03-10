@@ -1,29 +1,24 @@
 ﻿@{
-    Layout = "_Layout2";
+    Layout = "_Layout";
     ViewData["Title"] = "Login";
 }
 
-<style>
-    .center {
-        text-align: center;
-    }
-</style>
 
-<div class="row justify-content-center  p-5">
-    <div>
+<div class="container justify-content-center  p-5">
+    <div >
         <div class="card shadow">
             <div class="card-header">
                 <h6 class="text-center">Remote Login</h6>
             </div>
             <form class="form-signin p-5 center">
                 <label for="employeeid" class="sr-only">Employee Number</label>
-                <input type="tel" id="employeeid" class="form-control text-center" placeholder="Employee Number" required autofocus>
+                <input type="text" id="employeeid" class="form-control text-center" placeholder="Employee Number" required autofocus>
                 <input type="hidden" id="latitude" />
                 <input type="hidden" id="longitude" />
                 <p class="mb-3"></p>
                 <input class="btn btn-sm btn-success btn-block logbutton mb-0" type="submit" id="in" value="Login" />
                 <input class="btn btn-sm btn-danger btn-block logbutton" type="submit" id="out" value="Logout" />
-                <p class="mt-5 mb-3 text-muted">&copy; 2017-2019</p>
+                <p class="mt-5 mb-3 text-muted text-right">&copy; @DateTime.Now.Year</p>
             </form>
         </div>
     </div>
