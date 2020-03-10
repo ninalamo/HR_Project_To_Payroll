@@ -9,6 +9,7 @@ namespace domain
         public string LastName { get; set; }
         public string CompanyEmail { get; set; }
         public string PersonalEmail { get; set; }
+        public string ReportsTo { get; set; }
     }
 
 }
