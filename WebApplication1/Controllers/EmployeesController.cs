@@ -1,5 +1,6 @@
 ﻿using HR.Application.cqrs.Employee.Commands;
 using HR.Application.cqrs.Employee.Queries;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,14 @@ namespace WebApplication1.Controllers
 {
     public class EmployeesController : BaseController
     {
+        public EmployeesController(UserManager<IdentityUser> userManager) : base(userManager)
+        {
+        }
 
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            var result = await Mediator.Send(new GetEmployeesRequest());
+            var result = await Mediator.Send(new GetEmployees_Request());
             return View(result);
         }
 
@@ -120,7 +124,7 @@ namespace WebApplication1.Controllers
                         PersonalEmail = model.PersonalEmail,
                         CreatedBy = "N/A"
                     });
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index)).WithSuccess("Success", "Added new employee record");
                 }catch(SqlException ex)
                 {
                     return View(model).WithDanger("Duplicate key", ex.InnerException == null ? ex.Message : $"{ex.InnerException.Message}. {ex.Message}");
@@ -254,7 +258,7 @@ namespace WebApplication1.Controllers
 
         private bool EmployeeExists(Guid id)
         {
-            return Mediator.Send(new GetEmployeesRequest()).Result.Data.Any(i => i.EmployeeID == id);
+            return Mediator.Send(new GetEmployees_Request()).Result.Data.Any(i => i.EmployeeID == id);
              
         }
     }

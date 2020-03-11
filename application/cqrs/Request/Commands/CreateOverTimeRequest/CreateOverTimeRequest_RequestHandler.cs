@@ -3,6 +3,7 @@ using application.exceptions;
 using application.interfaces;
 using AutoMapper;
 using domain;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,30 +23,33 @@ namespace HR.Application.cqrs.Request.Commands
 
         public async Task<Unit> Handle(CreateOverTimeRequest_Request request, CancellationToken cancellationToken)
         {
-            var employee = await dbContext.Employees.FirstOrDefaultAsync(i => i.CompanyEmail.ToLower() == request.Requestor.ToLower());
+            var employee = await dbContext.Employees.AsNoTracking().FirstOrDefaultAsync(i => i.CompanyEmail.ToLower() == request.Requestor.ToLower());
 
-            if (employee == null) throw new NotFoundException(nameof(domain.Request), request.Requestor);
+            if (employee == null) 
+                throw new NotFoundException(nameof(domain.RequestTracker), request.Requestor);
 
-            if (string.IsNullOrWhiteSpace(employee.ReportsTo)) throw new Exception("Cannot process. User must be assigned a supervisor.");
+            if (string.IsNullOrWhiteSpace(employee.ReportsTo)) 
+                throw new Exception("Cannot process. User must be assigned a supervisor.");
 
             var approvers = await dbContext.Approvers.Include(i => i.Employee).AsNoTracking().ToArrayAsync();
 
-            if (!approvers.ToList().Any()) throw new Exception("Cannot process. Cannot find approver.");
+            if (!approvers.ToList().Any()) 
+                throw new Exception("Cannot process. Cannot find approver.");
 
             var supervisor = approvers.FirstOrDefault(i => i.Employee.CompanyEmail.ToLower() == employee.ReportsTo.ToLower());
 
             var limit = approvers.Where(i => i.TypeOfRequest == domain.RequestType.Overtime).Max(i => i.Level);
+
             var finalApprover = approvers.FirstOrDefault(i => i.TypeOfRequest == domain.RequestType.Overtime && i.Level == limit);
 
-            var entity = new domain.Request
+            var requestTracker = new RequestTracker
             {
-                Details = request.Details,
                 RequestorID = employee.ID,
                 IsActive = true,
                 TypeOfRequest = domain.RequestType.Overtime,
             };
 
-            entity.ApproverList.Add(new RequestApprover
+            requestTracker.ApproverList.Add(new ApprovalTracker
             {
                 ApproverID = supervisor.ID,
                 IsActive = true,
@@ -54,7 +58,7 @@ namespace HR.Application.cqrs.Request.Commands
                 ModifiedBy = request.Requestor
             });
 
-            entity.ApproverList.Add(new RequestApprover
+            requestTracker.ApproverList.Add(new ApprovalTracker
             {
                 ApproverID = finalApprover.ID,
                 IsActive = true,
@@ -63,7 +67,20 @@ namespace HR.Application.cqrs.Request.Commands
                 ModifiedBy = request.Requestor
             });
 
-            dbContext.Requests.Add(entity);
+            var otRequest = new OverTimeRequest
+            {
+                Classification = request.Classification,
+                EmployeeID = employee.ID,
+                IsActive = true,
+                Purpose = request.Purpose,
+                ShiftDate = request.ShiftDate,
+                TimeStart = request.TimeStart,
+                TimeEnd = request.TimeEnd,
+                Tracker = requestTracker
+
+            };
+
+            dbContext.OverTimeRequests.Add(otRequest);
 
             await dbContext.SaveChangesAsync(cancellationToken);
 

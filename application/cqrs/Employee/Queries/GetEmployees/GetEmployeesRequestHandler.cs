@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace HR.Application.cqrs.Employee.Queries
 {
-    public class GetEmployeesRequestHandler : RequestHandlerBase, IRequestHandler<GetEmployeesRequest, GetEmployeesResponse>
+    public class GetEmployeesRequestHandler : RequestHandlerBase, IRequestHandler<GetEmployees_Request, GetEmployeesResponse>
     {
         public GetEmployeesRequestHandler(IApplicationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 
-        public async Task<GetEmployeesResponse> Handle(GetEmployeesRequest request, CancellationToken cancellationToken)
+        public async Task<GetEmployeesResponse> Handle(GetEmployees_Request request, CancellationToken cancellationToken)
         {
             var total = dbContext.Employees.Count();
             var skip = request.GetSkip();

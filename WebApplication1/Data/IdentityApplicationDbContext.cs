@@ -27,7 +27,7 @@ namespace WebApplication1.Data
 
         private static void SeedUsers(UserManager<IdentityUser> userManager)
         {
-            if (userManager.FindByEmailAsync("johndoe@localhost").Result == null)
+            if (userManager.FindByEmailAsync("nin.alamo@outlook.com").Result == null)
             {
                 IdentityUser user = new IdentityUser
                 {
@@ -42,7 +42,7 @@ namespace WebApplication1.Data
                     SecurityStamp = Guid.NewGuid().ToString(),
                     PhoneNumberConfirmed = true,
                     TwoFactorEnabled = false,
-                    UserName = "superadmin"
+                    UserName = "nin.alamo@outlook.com"
                 };
 
                 IdentityResult result = userManager.CreateAsync(user, "Got2groove!").Result;

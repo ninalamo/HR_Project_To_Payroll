@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace domain
 {
-    public class Request : BaseAudit<long>
+    public class RequestTracker : BaseAudit<long>
     {
-        public Request()
+        public RequestTracker()
         {
-            ApproverList = new HashSet<RequestApprover>();
+            ApproverList = new HashSet<ApprovalTracker>();
         }
         public Guid RequestorID { get; set; }
-        public string Details { get; set; }
         public RequestType TypeOfRequest { get; set; }
 
         public Employee Requestor { get; set; }
-        public virtual ICollection<RequestApprover> ApproverList { get; }
+        public bool IsCancelled { get; set; }
+        public virtual ICollection<ApprovalTracker> ApproverList { get; }
     }
 
     public enum RequestType : long

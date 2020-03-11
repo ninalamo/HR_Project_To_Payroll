@@ -21,9 +21,4 @@
     <ProjectReference Include="..\lib.common\lib.common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="cqrs\Approver\Queries\" />
-    <Folder Include="cqrs\Request\Queries\" />
-  </ItemGroup>
-
 </Project>

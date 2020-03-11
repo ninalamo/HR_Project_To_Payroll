@@ -3,7 +3,7 @@ using MediatR;
 
 namespace HR.Application.cqrs.Employee.Queries
 {
-    public class GetEmployeesRequest : PagedQueryRequestBase, IRequest<GetEmployeesResponse>
+    public class GetEmployees_Request : PagedQueryRequestBase, IRequest<GetEmployeesResponse>
     {
     }
 }

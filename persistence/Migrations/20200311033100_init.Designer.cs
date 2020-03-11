@@ -10,8 +10,8 @@ using persistence;
 namespace HR.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200303053956_init-again")]
-    partial class initagain
+    [Migration("20200311033100_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,87 @@ namespace HR.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("domain.ApprovalTracker", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ApproverID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("RequestTrackerID")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool?>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ApproverID");
+
+                    b.HasIndex("RequestTrackerID");
+
+                    b.ToTable("ApprovalTrackers");
+                });
+
+            modelBuilder.Entity("domain.Approver", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("EmployeeID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("TypeOfRequest")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("Approvers");
+                });
 
             modelBuilder.Entity("domain.AuditTrail", b =>
                 {
@@ -105,6 +186,8 @@ namespace HR.Persistence.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("EmployeeID");
 
                     b.ToTable("RawLogs");
                 });
@@ -206,6 +289,9 @@ namespace HR.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ReportsTo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ID")
                         .HasName("EmployeeID");
 
@@ -284,6 +370,92 @@ namespace HR.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("domain.OverTimeRequest", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Classification")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("EmployeeID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Purpose")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ShiftDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("TimeEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset>("TimeStart")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<long>("TrackerID")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID")
+                        .HasName("ID");
+
+                    b.HasIndex("TrackerID");
+
+                    b.ToTable("OverTimeRequests");
+                });
+
+            modelBuilder.Entity("domain.RequestTracker", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("RequestorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long>("TypeOfRequest")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestorID");
+
+                    b.ToTable("RequestTrackers");
+                });
+
             modelBuilder.Entity("domain.Shift", b =>
                 {
                     b.Property<long>("ID")
@@ -355,6 +527,37 @@ namespace HR.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("domain.ApprovalTracker", b =>
+                {
+                    b.HasOne("domain.Approver", "Approver")
+                        .WithMany()
+                        .HasForeignKey("ApproverID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("domain.RequestTracker", null)
+                        .WithMany("ApproverList")
+                        .HasForeignKey("RequestTrackerID");
+                });
+
+            modelBuilder.Entity("domain.Approver", b =>
+                {
+                    b.HasOne("domain.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("domain.BioLog", b =>
+                {
+                    b.HasOne("domain.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("domain.ConsolidatedBioLog", b =>
                 {
                     b.HasOne("domain.Employee", "Employee")
@@ -375,6 +578,24 @@ namespace HR.Persistence.Migrations
                     b.HasOne("domain.Shift", "Shift")
                         .WithMany()
                         .HasForeignKey("ShiftID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("domain.OverTimeRequest", b =>
+                {
+                    b.HasOne("domain.RequestTracker", "Tracker")
+                        .WithMany()
+                        .HasForeignKey("TrackerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("domain.RequestTracker", b =>
+                {
+                    b.HasOne("domain.Employee", "Requestor")
+                        .WithMany()
+                        .HasForeignKey("RequestorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

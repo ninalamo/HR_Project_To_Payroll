@@ -1,0 +1,85 @@
+﻿@model ICollection<GetOverTimeRequestsResponseDto>;
+
+@{
+    ViewData["Title"] = "_PendingOTUserView";
+  
+}
+
+
+<div class="card shadow">
+    <div class="card-header bg-success text-white">
+        <h6>My Request - Pending</h6>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Employee ID
+                    </th>
+                    <th>
+                        Time Start
+                    </th>
+                    <th>
+                        Time End
+                    </th>
+                    <th>
+                        Classification
+                    </th>
+                    <th>
+                        Shift Date
+                    </th>
+                    <th>
+                        Purpose
+                    </th>
+                    <th>
+                        Approved Level 1
+                    </th>
+                    <th>
+                        Approved Level 2
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Where(i => i.Requestor == User.Identity.Name.ToLower()))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EmployeeID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TimeStart)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TimeEnd)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Classification)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShiftDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Purpose)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApproverStatus1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApproverStatus2)
+                        </td>
+
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.EmployeeID">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.EmployeeID">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.EmployeeID">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

@@ -1,0 +1,89 @@
+﻿@model domain.OverTimeRequest
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>OverTimeRequest</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TrackerID" class="control-label"></label>
+                <select asp-for="TrackerID" class="form-control" asp-items="ViewBag.TrackerID"></select>
+                <span asp-validation-for="TrackerID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmployeeID" class="control-label"></label>
+                <input asp-for="EmployeeID" class="form-control" />
+                <span asp-validation-for="EmployeeID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeStart" class="control-label"></label>
+                <input asp-for="TimeStart" class="form-control" />
+                <span asp-validation-for="TimeStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TimeEnd" class="control-label"></label>
+                <input asp-for="TimeEnd" class="form-control" />
+                <span asp-validation-for="TimeEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Classification" class="control-label"></label>
+                <input asp-for="Classification" class="form-control" />
+                <span asp-validation-for="Classification" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShiftDate" class="control-label"></label>
+                <input asp-for="ShiftDate" class="form-control" />
+                <span asp-validation-for="ShiftDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Purpose" class="control-label"></label>
+                <input asp-for="Purpose" class="form-control" />
+                <span asp-validation-for="Purpose" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedOn" class="control-label"></label>
+                <input asp-for="CreatedOn" class="form-control" />
+                <span asp-validation-for="CreatedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedOn" class="control-label"></label>
+                <input asp-for="ModifiedOn" class="form-control" />
+                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedBy" class="control-label"></label>
+                <input asp-for="CreatedBy" class="form-control" />
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedBy" class="control-label"></label>
+                <input asp-for="ModifiedBy" class="form-control" />
+                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -12,4 +12,12 @@ namespace persistence.configuration
             builder.HasKey(i => i.ID).HasName("AuditID");
         }
     }
+
+    public class OverTimeRequest_Configuration : IEntityTypeConfiguration<OverTimeRequest>
+    {
+        public void Configure(EntityTypeBuilder<OverTimeRequest> builder)
+        {
+            builder.HasKey(i => i.ID).HasName("ID");
+        }
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using HR.Application.cqrs.Employee.Commands;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
@@ -10,6 +11,10 @@ namespace WebApplication1.Controllers
 {
     public class BiologsController : BaseController
     {
+        public BiologsController(UserManager<IdentityUser> userManager) : base(userManager)
+        {
+        }
+
         public IActionResult Index()
         {
             return View();

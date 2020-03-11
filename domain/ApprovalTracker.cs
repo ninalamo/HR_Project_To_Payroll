@@ -2,7 +2,7 @@
 
 namespace domain
 {
-    public class RequestApprover : BaseAudit<long>
+    public class ApprovalTracker : BaseAudit<long>
     {
     
         public long ApproverID { get; set; }
