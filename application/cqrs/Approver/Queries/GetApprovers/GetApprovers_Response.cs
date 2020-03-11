@@ -22,7 +22,7 @@ namespace HR.Application.cqrs.Approver.Queries
         public long ApproverID { get; internal set; }
         public Guid EmployeeID { get; internal set; }
         public RequestType TypeOfRequest { get; internal set; }
-        public int Level { get; set; }
+        public int Level { get; internal set; }
 
         public void CreateMappings(Profile configuration)
         {
@@ -34,7 +34,7 @@ namespace HR.Application.cqrs.Approver.Queries
                 .ForMember(i => i.PersonalEmail, opt => opt.MapFrom(o => o.Employee.PersonalEmail))
                 .ForMember(i => i.ReportsTo, opt => opt.MapFrom(o => o.Employee.ReportsTo))
                 .ForMember(i => i.EmployeeID, opt => opt.MapFrom(o => o.Employee.ID))
-                 .ForMember(i => i.EmployeeNumber, opt => opt.MapFrom(o => o.Employee.EmployeeNumber))
+                .ForMember(i => i.EmployeeNumber, opt => opt.MapFrom(o => o.Employee.EmployeeNumber))
                 .ForMember(i => i.TypeOfRequest, opt => opt.MapFrom(o => o.TypeOfRequest));
         }
     }

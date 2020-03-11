@@ -45,38 +45,39 @@
             <tbody>
                 @foreach (var item in Model.Where(i => i.Requestor == User.Identity.Name.ToLower()))
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EmployeeID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TimeStart)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TimeEnd)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Classification)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ShiftDate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Purpose)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ApproverStatus1)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ApproverStatus2)
-                        </td>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmployeeID)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeStart)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeEnd)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Classification)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShiftDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Purpose)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApproverStatus1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApproverStatus2)
+                    </td>
 
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.EmployeeID">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.EmployeeID">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.EmployeeID">Delete</a>
-                        </td>
-                    </tr>
+                
+                    <td class="btn-group float-right">
+                        <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.EmployeeID" title="Edit"><i class="fa fa-edit"></i></a>
+                        <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.EmployeeID" title="Details"><i class="fa fa-info"></i></a>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.EmployeeID" title="Remove"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

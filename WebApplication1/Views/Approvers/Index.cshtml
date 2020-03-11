@@ -1,0 +1,60 @@
+﻿@model GetApprovers_Response
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<p>
+    <a class="btn btn-sm btn-outline-success" asp-action="Create">Create New</a>
+</p>
+<div class="card shadow">
+    <div class="card-header bg-success text-white">
+        <h6>Approvers List</h6>
+    </div>
+    <div class="card-body">
+  
+        <table class="table table-striped table-borderless" id="employee">
+            <thead>
+                <tr>
+
+                    <th>
+                        Full Name
+                    </th>
+                    <th>
+                        Type Of Request
+                    </th>
+                    <th>
+                        Level
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Approvers)
+                {
+                    <tr>
+
+                        <td>
+                            @($"{item.FirstName} {item.LastName}")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TypeOfRequest)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Level)
+                        </td>
+                        <td class="btn-group float-right">
+                            <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.ApproverID" title="Edit"><i class="fa fa-edit"></i></a> 
+                            <a class="btn btn-outline-danger" asp-action="Remove" asp-route-id="@item.ApproverID" title="Remove"><i class="fa fa-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+      
+        
+        
+    </div>
+</div>

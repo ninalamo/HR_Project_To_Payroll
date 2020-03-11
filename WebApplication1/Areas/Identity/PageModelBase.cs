@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApplication1.Areas.Identity
 {
+
     public class PageModelBase : PageModel
     {
         private IMediator _mediator;

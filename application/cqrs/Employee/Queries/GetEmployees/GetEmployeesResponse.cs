@@ -19,13 +19,16 @@ namespace HR.Application.cqrs.Employee.Queries
         public string EmployeeNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FullName { get; set; }
         public string CompanyEmail { get; set; }
         public string PersonalEmail { get; set; }
+        public string ReportsTo { get; set; }
 
         public void CreateMappings(Profile configuration)
         {
             configuration.CreateMap<domain.Employee, GetEmployeesDto>()
-                .ForMember(i => i.EmployeeID, opt => opt.MapFrom(o => o.ID));
+                .ForMember(i => i.EmployeeID, opt => opt.MapFrom(o => o.ID))
+                .ForMember(i => i.FullName, opt => opt.MapFrom(o => $"{o.FirstName} {o.LastName}"));
         }
     }
 }

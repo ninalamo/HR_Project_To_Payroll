@@ -52,10 +52,10 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.PersonalEmail)
                     </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.EmployeeID">Edit</a> |
-                        <a asp-action="DailyTimeRecord" asp-route-id="@item.EmployeeID">DTR</a> |
-                        <a asp-action="Delete" asp-route-id="@item.EmployeeID">Remove</a>
+                    <td class="btn-group float-right">
+                        <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.EmployeeID" title="Edit"><i class="fa fa-edit"></i></a> 
+                        <a class="btn btn-outline-info" asp-action="DailyTimeRecord" asp-route-id="@item.EmployeeID" title="View DTR"><i class="fa fa-print"></i></a> 
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.EmployeeID" title="Remove"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
             }
