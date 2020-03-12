@@ -24,7 +24,7 @@ namespace HR.Application.cqrs.Approver.Queries
 
             return new GetApprovers_Response
             {
-                Approvers = await result.ProjectTo<GetApprovers_Dto>(mapper.ConfigurationProvider).ToArrayAsync()
+                Result = await result.ProjectTo<GetApprovers_Dto>(mapper.ConfigurationProvider).ToArrayAsync()
             };
         }
     }

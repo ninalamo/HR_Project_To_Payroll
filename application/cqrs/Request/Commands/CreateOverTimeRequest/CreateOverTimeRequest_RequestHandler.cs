@@ -52,6 +52,7 @@ namespace HR.Application.cqrs.Request.Commands
             requestTracker.ApproverList.Add(new ApprovalTracker
             {
                 ApproverID = supervisor.ID,
+                ApproverEmail = supervisor.Employee.CompanyEmail,
                 IsActive = true,
                 Status = null,
                 CreatedBy = request.Requestor,
@@ -61,6 +62,7 @@ namespace HR.Application.cqrs.Request.Commands
             requestTracker.ApproverList.Add(new ApprovalTracker
             {
                 ApproverID = finalApprover.ID,
+                ApproverEmail = finalApprover.Employee.CompanyEmail,
                 IsActive = true,
                 Status = null,
                 CreatedBy = request.Requestor,

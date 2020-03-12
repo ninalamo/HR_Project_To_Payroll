@@ -32,7 +32,7 @@ namespace WebApplication1.Controllers
         {
             GetOverTimeRequests_Response response = new GetOverTimeRequests_Response();
 
-            var approvers = (await Mediator.Send(new GetApprovers_Request(), CancellationToken.None)).Approvers.Where(i => i.TypeOfRequest == RequestType.Overtime);
+            var approvers = (await Mediator.Send(new GetApprovers_Request(), CancellationToken.None)).Result.Where(i => i.TypeOfRequest == RequestType.Overtime);
 
             var currentUser = approvers.FirstOrDefault(i => i.CompanyEmail.ToLower() == User.Identity.Name.ToLower());
 
@@ -95,10 +95,16 @@ namespace WebApplication1.Controllers
                     if(string.IsNullOrEmpty(shortInfo.ReportsTo))
                         throw new Exception("Cannot find approver for employee. Please check 'ReportsTo' field in Employee profile.");
 
+                    //get supervisor (reportsTo)
                     request.Supervisor = shortInfo.ReportsTo.ToLower();
+
+                    //get the top / last approver
                     int top = getApproversResponse.Approvers.Max(i => i.Level);
+
+                    //assign the approver for that type of request
                     request.FinalApprover = getApproversResponse.Approvers.FirstOrDefault(i => i.Level == top).CompanyEmail;
 
+                    //assign requestor as current user (email)
                     request.Requestor = User.Identity.Name;
 
                     await Mediator.Send(request);
