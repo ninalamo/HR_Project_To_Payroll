@@ -15,9 +15,11 @@ using lib.common;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using HR.Application.cqrs.Approver.Queries;
 using System.Collections;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize(Roles ="superadmin")]
     public class EmployeesController : BaseController
     {
         public EmployeesController(UserManager<IdentityUser> userManager) : base(userManager)

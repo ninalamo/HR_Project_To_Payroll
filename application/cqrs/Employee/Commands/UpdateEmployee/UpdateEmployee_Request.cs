@@ -26,7 +26,6 @@ namespace HR.Application.cqrs.Employee.Commands
             RuleFor(i => i.FirstName).NotEmpty();
             RuleFor(i => i.LastName).NotEmpty();
             RuleFor(i => i.CompanyEmail).EmailAddress().NotEmpty();
-            RuleFor(i => i.ReportsTo).NotEmpty();
             RuleFor(i => i.EmployeeID).NotEmpty();
         }
     }

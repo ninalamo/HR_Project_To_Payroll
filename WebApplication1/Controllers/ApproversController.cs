@@ -16,9 +16,11 @@ using WebApplication1.Extensions;
 using System.Security.Claims;
 using lib.common;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize(Roles = "superadmin")]
     public class ApproversController : BaseController
     {
         public ApproversController(UserManager<IdentityUser> userManager) : base(userManager)
@@ -55,7 +57,7 @@ namespace WebApplication1.Controllers
         // GET: Approvers/Create
         public IActionResult Create()
         {
-            ViewData["Employee"] = new SelectList(Mediator.Send(new GetEmployees_Request { PageNumber = 1, PageSize = 1000}).Result.Data.Where(i => i.CanApprove), "CompanyEmail", "FullName");
+            ViewData["Employee"] = GetEmployeeListsForDropDown().Result;
             return View();
         }
 
@@ -66,38 +68,47 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CompanyEmail,Level,TypeOfRequest")] CreateApproverViewModel model)
         {
-            var list = new SelectList(Mediator.Send(new GetEmployees_Request { PageNumber = 1, PageSize = 1000 }).Result.Data, "CompanyEmail", "FullName");
+            SelectList list = await GetEmployeeListsForDropDown();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await Mediator.Send(new CreateApprover_Request
-                    {
-                        CompanyEmail = model.CompanyEmail,
-                        Level = model.Level,
-                        TypeOfRequest = model.TypeOfRequest,
-                        CreatedBy = User.Identity.Name,
-                        ModifiedBy = User.Identity.Name
-                    });
+                    //if 
+                    var account = await UserManager.FindByEmailAsync(model.CompanyEmail);
 
-                    //if successfully added as an approver
-                    //TODO: add claims
-                    var user = await UserManager.GetUserAsync(User);
-                    //await UserManager.AddToRoleAsync(user, "approver");
-                    var claims = await UserManager.GetClaimsAsync(user);
+                    if (account == null) throw new Exception($"User has no account yet. Have the user register first so his/her profile gets activated.");
 
-                    if(claims.Any(i => i.Type == model.TypeOfRequest.ToString() && i.Value == "CanApprove"))
+                    var claims = (await UserManager.GetClaimsAsync(account)).ToList();
+
+
+                    if (claims.Any(i => i.Type == model.TypeOfRequest.ToString() && i.Value == "CanApprove"))
                     {
-                        //do not do anything
-                    }
-                    else
-                    {
-                        await UserManager.AddClaimAsync(user, new Claim(model.TypeOfRequest.ToString(), "CanApprove"));
+                        //remove
+                        var removeMe = claims.FirstOrDefault(i => i.Type == model.TypeOfRequest.ToString() && i.Value == "CanApprove");
+                        await UserManager.RemoveClaimAsync(account, removeMe);
                     }
 
-                    return RedirectToAction(nameof(Index)).WithSuccess("Success", "Added approver");
-                }catch(Exception ex)
+                    var result = await UserManager.AddClaimAsync(account, new Claim(model.TypeOfRequest.ToString(), "CanApprove"));
+
+                    if (result.Succeeded)
+                    {
+                        await Mediator.Send(new CreateApprover_Request
+                        {
+                            CompanyEmail = model.CompanyEmail,
+                            Level = model.Level,
+                            TypeOfRequest = model.TypeOfRequest,
+                            CreatedBy = User.Identity.Name,
+                            ModifiedBy = User.Identity.Name
+                        });
+
+                        return RedirectToAction(nameof(Index)).WithSuccess("Success", "Added approver");
+                    }
+
+                    throw new Exception(string.Join("|", result.Errors.Select(i => i.Description).ToArray()));
+
+                }
+                catch (Exception ex)
                 {
                     ViewData["Employee"] = list;
                     return base.View(model).WithDanger("Error", ex.GetExceptionMessage());
@@ -110,6 +121,8 @@ namespace WebApplication1.Controllers
         }
 
        
+
+
 
         // GET: Approvers/Edit/5
         public async Task<IActionResult> Edit(long? id)
@@ -154,17 +167,7 @@ namespace WebApplication1.Controllers
             {
                 try
                 {
-                    await Mediator.Send(new UpdateApprover_Request
-                    {
-                        ApproverID = model.ApproverID,
-                        IsActive = model.IsActive,
-                        Level = model.Level,
-                        TypeOfRequest = model.TypeOfRequest
-                    });
-
-                    //if successfully edited as an approver
-                    //TODO: add claims
-                    var user = await UserManager.GetUserAsync(User);
+                    var user = await UserManager.FindByEmailAsync(approver.CompanyEmail);
                     var claims = await UserManager.GetClaimsAsync(user);
 
                     if (claims.Any(i => i.Type == model.TypeOfRequest.ToString() && i.Value == "CanApprove"))
@@ -173,14 +176,25 @@ namespace WebApplication1.Controllers
                         //do not do anything
                         await UserManager.RemoveClaimAsync(user, removeMe);
                     }
-                 
-                        
-                    await UserManager.AddClaimAsync(user, new Claim(model.TypeOfRequest.ToString(), "CanApprove"));
-                   
+
+                    var result = await UserManager.AddClaimAsync(user, new Claim(model.TypeOfRequest.ToString(), "CanApprove"));
+
+                    if (result.Succeeded)
+                    {
+                        await Mediator.Send(new UpdateApprover_Request
+                        {
+                            ApproverID = model.ApproverID,
+                            IsActive = model.IsActive,
+                            Level = model.Level,
+                            TypeOfRequest = model.TypeOfRequest
+                        });
 
 
-                    //TODO: auth
-                    return RedirectToAction(nameof(Index)).WithSuccess("Success", "Updated approver settings.");
+                        return RedirectToAction(nameof(Index)).WithSuccess("Success", "Updated approver settings.");
+                    }
+
+                    throw new Exception(string.Join("|", result.Errors.Select(i => i.Description).ToArray()));
+
                 }
                 catch (Exception ex)
                 {
@@ -220,6 +234,15 @@ namespace WebApplication1.Controllers
             //return RedirectToAction(nameof(Index));
         }
 
-       
+
+        private async Task<SelectList> GetEmployeeListsForDropDown()
+        {
+            var accounts = await UserManager.Users.Select(i => i.Email.ToLower()).ToArrayAsync();
+            var response = await Mediator.Send(new GetEmployees_Request { PageNumber = 1, PageSize = 1000 });
+            var list = new SelectList(response.Data.Where(i => i.CanApprove && accounts.Contains(i.CompanyEmail.ToLower())), "CompanyEmail", "FullName");
+            return list;
+        }
+
+
     }
 }

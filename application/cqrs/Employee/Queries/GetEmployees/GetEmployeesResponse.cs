@@ -24,6 +24,7 @@ namespace HR.Application.cqrs.Employee.Queries
         public string PersonalEmail { get; set; }
         public string ReportsTo { get; set; }
         public bool CanApprove { get; set; }
+        public bool IsActive { get; set; }
 
         public void CreateMappings(Profile configuration)
         {
