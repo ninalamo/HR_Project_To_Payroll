@@ -43,10 +43,12 @@ namespace HR.Application.cqrs.Request.Queries
         public bool Approved => (ApproverStatus1.HasValue && ApproverStatus1.Value) && (ApproverStatus2.HasValue && ApproverStatus2.Value);
         public bool IsCancelled { get; set; }
         public string CurrentApprover => !ApproverStatus1.HasValue ? ApproverEmail1 : ApproverEmail2;
+        public DateTimeOffset LastUpdated { get; set; }
 
         public void CreateMappings(Profile configuration)
         {
             configuration.CreateMap<domain.OverTimeRequest, GetOverTimeRequestsResponseDto>()
+                .ForMember(i => i.LastUpdated,opt => opt.MapFrom(o => o.ModifiedOn))
                 .ForMember(i => i.IsCancelled, opt => opt.MapFrom( o => o.Tracker.IsCancelled))
                 .ForMember(i => i.Requestor,
                     opt => opt.MapFrom(o => o.Tracker.Requestor == null ? "" : $"{o.Tracker.Requestor.FirstName} {o.Tracker.Requestor.LastName}"))
