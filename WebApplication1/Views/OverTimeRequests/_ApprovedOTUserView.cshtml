@@ -13,6 +13,10 @@
             <thead>
                 <tr>
                     <th>
+                        Shift Date
+                    </th>
+
+                    <th>
                         Time Start
                     </th>
                     <th>
@@ -21,9 +25,7 @@
                     <th>
                         Classification
                     </th>
-                    <th>
-                        Shift Date
-                    </th>
+
                     <th>
                         Purpose
                     </th>
@@ -33,39 +35,41 @@
                     <th>
                         Final Approval
                     </th>
+                    <th>
+                        Last Updated
+                    </th>
 
-                   
                 </tr>
             </thead>
             <tbody class="text-center">
                 @foreach (var item in Model.Where(i => i.RequestorEmail == User.Identity.Name.ToLower()))
                 {
-                    <tr>
+                <tr>
+                    <td>
+                        @item.ShiftDate.ToString("MMM dd yyyy")
+                    </td>
+                    <td>
+                        @item.TimeStart.ToString("HH:mm tt")
+                    </td>
+                    <td>
+                        @item.TimeEnd.ToString("HH:mm tt")
+                    </td>
+                    <td>
+                        @item.Classification
+                    </td>
 
-                        <td>
-                            @item.TimeStart.ToString("HH:mm tt")
-                        </td>
-                        <td>
-                            @item.TimeEnd.ToString("HH:mm tt")
-                        </td>
-                        <td>
-                            @item.Classification
-                        </td>
-                        <td>
-                            @item.ShiftDate.ToString("MMM dd yyyy")
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Purpose)
-                        </td>
-                        <td>
-                            <small>@($"{item.Approver1}")</small> <strong> - @item.ApprovalStatusText1</strong>
-                        </td>
-                        <td>
-                            <small>@($"{item.Approver2}")</small> <strong> - @item.ApprovalStatusText2</strong>
-                        </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Purpose)
+                    </td>
+                    <td>
+                        <small>@($"{item.Approver1}")</small> <strong> - @item.ApprovalStatusText1</strong>
+                    </td>
+                    <td>
+                        <small>@($"{item.Approver2}")</small> <strong> - @item.ApprovalStatusText2</strong>
+                    </td>
+                    <td>@item.LastUpdated.ToString("MMM dd yyyy HH:mm tt")</td>
 
-
-                    </tr>
+                </tr>
                 }
             </tbody>
         </table>

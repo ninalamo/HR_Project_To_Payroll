@@ -15,6 +15,7 @@ using HR.Application.cqrs.Approver.Commands;
 using WebApplication1.Extensions;
 using System.Security.Claims;
 using lib.common;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace WebApplication1.Controllers
 {
@@ -82,9 +83,18 @@ namespace WebApplication1.Controllers
 
                     //if successfully added as an approver
                     //TODO: add claims
-                    //var user = await UserManager.GetUserAsync(User);
+                    var user = await UserManager.GetUserAsync(User);
                     //await UserManager.AddToRoleAsync(user, "approver");
-                    //await UserManager.AddClaimAsync(user, new Claim($"Approver_{model.TypeOfRequest.ToString()}", model.Level.ToString() ));
+                    var claims = await UserManager.GetClaimsAsync(user);
+
+                    if(claims.Any(i => i.Type == model.TypeOfRequest.ToString() && i.Value == "CanApprove"))
+                    {
+                        //do not do anything
+                    }
+                    else
+                    {
+                        await UserManager.AddClaimAsync(user, new Claim(model.TypeOfRequest.ToString(), "CanApprove"));
+                    }
 
                     return RedirectToAction(nameof(Index)).WithSuccess("Success", "Added approver");
                 }catch(Exception ex)
@@ -151,6 +161,23 @@ namespace WebApplication1.Controllers
                         Level = model.Level,
                         TypeOfRequest = model.TypeOfRequest
                     });
+
+                    //if successfully edited as an approver
+                    //TODO: add claims
+                    var user = await UserManager.GetUserAsync(User);
+                    var claims = await UserManager.GetClaimsAsync(user);
+
+                    if (claims.Any(i => i.Type == model.TypeOfRequest.ToString() && i.Value == "CanApprove"))
+                    {
+                        var removeMe = claims.FirstOrDefault(i => i.Type == model.TypeOfRequest.ToString() && i.Value == "CanApprove");
+                        //do not do anything
+                        await UserManager.RemoveClaimAsync(user, removeMe);
+                    }
+                 
+                        
+                    await UserManager.AddClaimAsync(user, new Claim(model.TypeOfRequest.ToString(), "CanApprove"));
+                   
+
 
                     //TODO: auth
                     return RedirectToAction(nameof(Index)).WithSuccess("Success", "Updated approver settings.");

@@ -7,15 +7,15 @@
 
 
 <div class="card shadow">
-    <div class="card-header bg-success text-white">
-        <h6>My Request - Pending</h6>
+    <div class="card-header bg-gradient-info text-white">
+        <h6>My Request(s) - Pending</h6>
     </div>
     <div class="card-body">
         <table class="table">
             <thead>
                 <tr>
                     <th>
-                        Employee ID
+                        Shift Date
                     </th>
                     <th>
                         Time Start
@@ -26,9 +26,7 @@
                     <th>
                         Classification
                     </th>
-                    <th>
-                        Shift Date
-                    </th>
+                    
                     <th>
                         Purpose
                     </th>
@@ -38,44 +36,47 @@
                     <th>
                         Approved Level 2
                     </th>
-
+                    <th>
+                        Last Updated
+                    </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Where(i => i.Requestor == User.Identity.Name.ToLower()))
+                @foreach (var item in Model.Where(i => i.RequestorEmail == User.Identity.Name.ToLower()))
                 {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EmployeeID)
+                        @item.ShiftDate.ToString("MMM dd yyyy")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TimeStart)
+                        @item.TimeStart.ToString("HH:mm tt")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TimeEnd)
+                        @item.TimeEnd.ToString("HH:mm tt")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Classification)
+                        @item.Classification
                     </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ShiftDate)
-                    </td>
+
                     <td>
                         @Html.DisplayFor(modelItem => item.Purpose)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ApproverStatus1)
+                        <small>@($"{item.Approver1}")</small> <strong> - @item.ApprovalStatusText1</strong>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ApproverStatus2)
+                        <small>@($"{item.Approver2}")</small> <strong> - @item.ApprovalStatusText2</strong>
                     </td>
+                    <td>@item.LastUpdated.ToString("MMM dd yyyy HH:mm tt")</td>
 
-                
+
                     <td class="btn-group float-right">
-                        <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.EmployeeID" title="Edit"><i class="fa fa-edit"></i></a>
-                        <a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.EmployeeID" title="Details"><i class="fa fa-info"></i></a>
-                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.EmployeeID" title="Remove"><i class="far fa-trash-alt"></i></a>
+                        @if (item.ApproverStatus1.HasValue || item.ApproverStatus2.HasValue)
+                        {
+                            <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.EmployeeID" title="Edit"><i class="fa fa-edit"></i></a>
+                        }
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.EmployeeID" title="Remove"><i class="far fa-window-close"></i></a>
                     </td>
                 </tr>
                 }

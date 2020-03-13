@@ -8,13 +8,16 @@
 
 
 <div class="card shadow">
-    <div class="card-header bg-gradient-success text-white">
+    <div class="card-header bg-gradient-danger text-white">
         <h6>My Request - Denied / Cancelled</h6>
     </div>
     <div class="card-body">
         <table class="table text-center">
             <thead>
                 <tr>
+                    <th>
+                        Shift Date
+                    </th>
                     <th>
                         Time Start
                     </th>
@@ -24,9 +27,7 @@
                     <th>
                         Classification
                     </th>
-                    <th>
-                        Shift Date
-                    </th>
+
                     <th>
                         Purpose
                     </th>
@@ -36,44 +37,46 @@
                     <th>
                         Final Approval
                     </th>
-
+                    <th>
+                        Last Updated
+                    </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody class="text-center">
                 @foreach (var item in Model.Where(i => i.RequestorEmail == User.Identity.Name.ToLower()))
                 {
-                    <tr>
+                <tr>
+                    <td>
+                        @item.ShiftDate.ToString("MMM dd yyyy")
+                    </td>
+                    <td>
+                        @item.TimeStart.ToString("HH:mm tt")
+                    </td>
+                    <td>
+                        @item.TimeEnd.ToString("HH:mm tt")
+                    </td>
+                    <td>
+                        @item.Classification
+                    </td>
 
-                        <td>
-                            @item.TimeStart.ToString("HH:mm tt")
-                        </td>
-                        <td>
-                            @item.TimeEnd.ToString("HH:mm tt")
-                        </td>
-                        <td>
-                            @item.Classification
-                        </td>
-                        <td>
-                            @item.ShiftDate.ToString("MMM dd yyyy")
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Purpose)
-                        </td>
-                        <td>
-                            <small>@($"{item.Approver1}")</small> <strong> - @item.ApprovalStatusText1</strong>
-                        </td>
-                        <td>
-                            <small>@($"{item.Approver2}")</small> <strong> - @item.ApprovalStatusText2</strong>
-                        </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Purpose)
+                    </td>
+                    <td>
+                        <small>@($"{item.Approver1}")</small> <strong> - @item.ApprovalStatusText1</strong>
+                    </td>
+                    <td>
+                        <small>@($"{item.Approver2}")</small> <strong> - @item.ApprovalStatusText2</strong>
+                    </td>
+                    <td>@item.LastUpdated.ToString("MMM dd yyyy HH:mm tt")</td>
 
 
-                        <td class="btn-group float-right">
-                            <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.EmployeeID" title="Resubmit"><i class="fas fa-redo-alt"></i></a>
-                            @*<a class="btn btn-outline-info" asp-action="Details" asp-route-id="@item.EmployeeID" title="Details"><i class="fa fa-info"></i></a>*@
-                            <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.EmployeeID" title="Archive"><i class="fas fa-archive"></i></a>
-                        </td>
-                    </tr>
+                    <td class="btn-group float-right">
+                        <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.EmployeeID" title="Resubmit"><i class="fas fa-redo-alt"></i></a>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.EmployeeID" title="Archive"><i class="fas fa-archive"></i></a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
