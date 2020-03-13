@@ -46,7 +46,7 @@
                             @Html.DisplayFor(modelItem => item.TypeOfRequest)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Level)
+                            @((domain.ApproverTypeEnum)item.Level)
                         </td>
                         <td>
                             @item.IsActive

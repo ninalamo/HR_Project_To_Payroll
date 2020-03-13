@@ -78,16 +78,16 @@ function showPosition(position) {
 }
 
 function showError(error) {
-    if (error.code === 1) {
-        x.innerHTML = "User denied the request for Geolocation."
-    }
-    else if (err.code === 2) {
-        x.innerHTML = "Location information is unavailable."
-    }
-    else if (err.code === 3) {
-        x.innerHTML = "The request to get user location timed out."
-    }
-    else {
-        x.innerHTML = "An unknown error occurred."
-    }
+    //if (error.code === 1) {
+    //    x.innerHTML = "User denied the request for Geolocation."
+    //}
+    //else if (err.code === 2) {
+    //    x.innerHTML = "Location information is unavailable."
+    //}
+    //else if (err.code === 3) {
+    //    x.innerHTML = "The request to get user location timed out."
+    //}
+    //else {
+    //    x.innerHTML = "An unknown error occurred."
+    //}
 }

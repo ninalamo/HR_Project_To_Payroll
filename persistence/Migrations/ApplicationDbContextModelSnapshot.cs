@@ -99,9 +99,8 @@ namespace HR.Persistence.Migrations
                     b.HasKey("ID")
                         .HasName("ApproverID");
 
-                    b.HasIndex("EmployeeID");
-
-                    b.HasIndex("ID", "TypeOfRequest", "Level");
+                    b.HasIndex("EmployeeID", "TypeOfRequest", "Level")
+                        .IsUnique();
 
                     b.ToTable("Approvers");
                 });
@@ -261,6 +260,9 @@ namespace HR.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("CanApprove")
+                        .HasColumnType("bit");
+
                     b.Property<string>("CompanyEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -314,6 +316,7 @@ namespace HR.Persistence.Migrations
                         new
                         {
                             ID = new Guid("00000000-0000-0000-0000-000000000001"),
+                            CanApprove = false,
                             CompanyEmail = "sabin.alessa@outlook.com",
                             CreatedOn = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
                             EmployeeNumber = "112717",

@@ -1,0 +1,74 @@
+﻿@model ICollection<GetOverTimeRequestsResponseDto>;
+
+@{
+    ViewData["Title"] = "_ApprovedOTUserView";
+}
+
+<div class="card shadow">
+    <div class="card-header bg-gradient-success text-white">
+        <h6>My Request - Approved</h6>
+    </div>
+    <div class="card-body">
+        <table class="table text-center">
+            <thead>
+                <tr>
+                    <th>
+                        Time Start
+                    </th>
+                    <th>
+                        Time End
+                    </th>
+                    <th>
+                        Classification
+                    </th>
+                    <th>
+                        Shift Date
+                    </th>
+                    <th>
+                        Purpose
+                    </th>
+                    <th>
+                        First Approval
+                    </th>
+                    <th>
+                        Final Approval
+                    </th>
+
+                   
+                </tr>
+            </thead>
+            <tbody class="text-center">
+                @foreach (var item in Model.Where(i => i.RequestorEmail == User.Identity.Name.ToLower()))
+                {
+                    <tr>
+
+                        <td>
+                            @item.TimeStart.ToString("HH:mm tt")
+                        </td>
+                        <td>
+                            @item.TimeEnd.ToString("HH:mm tt")
+                        </td>
+                        <td>
+                            @item.Classification
+                        </td>
+                        <td>
+                            @item.ShiftDate.ToString("MMM dd yyyy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Purpose)
+                        </td>
+                        <td>
+                            <small>@($"{item.Approver1}")</small> <strong> - @item.ApprovalStatusText1</strong>
+                        </td>
+                        <td>
+                            <small>@($"{item.Approver2}")</small> <strong> - @item.ApprovalStatusText2</strong>
+                        </td>
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>

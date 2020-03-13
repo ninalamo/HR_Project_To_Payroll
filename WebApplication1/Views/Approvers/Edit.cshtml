@@ -33,7 +33,12 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Level" class="control-label"></label>
-                        <input asp-for="Level" class="form-control" min="1" placeholder="1" />
+                        <select asp-for="Level" class="form-control">
+                            <option value="@((int)domain.ApproverTypeEnum.FirstLevelApprover)">First Level Approver</option>
+                            <option value="@((int)domain.ApproverTypeEnum.SecondLevelApprover)">Second Level Approver</option>
+                            <option value="@((int)domain.ApproverTypeEnum.ThirdLevelApprover)">Third Level Approver</option>
+                            <option value="@((int)domain.ApproverTypeEnum.FinalApprover)">Final Approver</option>
+                        </select>
                         <span asp-validation-for="Level" class="text-danger"></span>
                     </div>
                     <div class="form-group form-check">

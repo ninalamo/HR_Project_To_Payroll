@@ -24,6 +24,9 @@ namespace WebApplication1.Models.Employees
         [EmailAddress]
         [Display(Name = "Personal Email")]
         public string PersonalEmail { get; set; }
-        public string CreatedBy { get; set; }
+        [Required]
+        public bool CanApprove { get; set; }
+        [Display(Name ="Reports To")]
+        public long ReportsTo { get; set; }
     }
 }

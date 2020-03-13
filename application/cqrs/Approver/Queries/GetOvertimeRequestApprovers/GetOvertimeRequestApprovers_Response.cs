@@ -22,10 +22,11 @@ namespace HR.Application.cqrs.Approver.Queries
         public RequestType TypeOfRequest { get; internal set; }
         public int Level { get; set; }
         public bool IsActive { get; set; }
+        public string FullName { get; set; }
 
         public void CreateMappings(Profile configuration)
         {
-            configuration.CreateMap<domain.Approver, GetApprovers_Dto>()
+            configuration.CreateMap<domain.Approver, GetOvertimeApprovers_Dto>()
                .ForMember(i => i.FullName, opt => opt.MapFrom(o => $"{o.Employee.FirstName} {o.Employee.LastName}"))
                .ForMember(i => i.ApproverID, opt => opt.MapFrom(o => o.ID))
                .ForMember(i => i.CompanyEmail, opt => opt.MapFrom(o => o.Employee.CompanyEmail))

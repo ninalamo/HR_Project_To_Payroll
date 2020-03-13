@@ -10,7 +10,7 @@ using persistence;
 namespace HR.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200311033100_init")]
+    [Migration("20200312051321_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,10 @@ namespace HR.Persistence.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("ApproverID")
+                    b.Property<string>("ApproverEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ApproverID")
                         .HasColumnType("bigint");
 
                     b.Property<string>("CreatedBy")
@@ -95,9 +98,11 @@ namespace HR.Persistence.Migrations
                     b.Property<long>("TypeOfRequest")
                         .HasColumnType("bigint");
 
-                    b.HasKey("ID");
+                    b.HasKey("ID")
+                        .HasName("ApproverID");
 
-                    b.HasIndex("EmployeeID");
+                    b.HasIndex("EmployeeID", "TypeOfRequest", "Level")
+                        .IsUnique();
 
                     b.ToTable("Approvers");
                 });
@@ -437,6 +442,9 @@ namespace HR.Persistence.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsCancelled")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -531,9 +539,7 @@ namespace HR.Persistence.Migrations
                 {
                     b.HasOne("domain.Approver", "Approver")
                         .WithMany()
-                        .HasForeignKey("ApproverID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApproverID");
 
                     b.HasOne("domain.RequestTracker", null)
                         .WithMany("ApproverList")

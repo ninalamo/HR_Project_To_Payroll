@@ -23,6 +23,7 @@ namespace HR.Application.cqrs.Employee.Queries
         public string CompanyEmail { get; set; }
         public string PersonalEmail { get; set; }
         public string ReportsTo { get; set; }
+        public bool CanApprove { get; set; }
 
         public void CreateMappings(Profile configuration)
         {

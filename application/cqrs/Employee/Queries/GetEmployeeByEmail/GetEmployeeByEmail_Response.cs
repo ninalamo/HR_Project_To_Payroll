@@ -14,6 +14,7 @@ namespace HR.Application.cqrs.Employee.Queries
         public bool IsActive { get; set; }
         public Guid EmployeeID { get; set; }
         public string ReportsTo { get; set; }
+        public bool CanApprove { get; set; }
 
         private static readonly Expression<Func<domain.Employee, GetEmployeeByEmail_Response>> Projection = (e) =>
         new GetEmployeeByEmail_Response

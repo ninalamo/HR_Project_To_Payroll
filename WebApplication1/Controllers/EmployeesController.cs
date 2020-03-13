@@ -11,6 +11,10 @@ using System.Threading.Tasks;
 using WebApplication1.Extensions;
 using WebApplication1.Models.Biologs;
 using WebApplication1.Models.Employees;
+using lib.common;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using HR.Application.cqrs.Approver.Queries;
+using System.Collections;
 
 namespace WebApplication1.Controllers
 {
@@ -26,6 +30,8 @@ namespace WebApplication1.Controllers
             var result = await Mediator.Send(new GetEmployees_Request());
             return View(result);
         }
+
+        #region DTR
 
         public IActionResult DailyTimeRecord(Guid id)
         { 
@@ -78,6 +84,10 @@ namespace WebApplication1.Controllers
 
             return View(request).WithWarning("Warning", "Something's off.");
         }
+
+        #endregion
+
+
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
@@ -101,6 +111,7 @@ namespace WebApplication1.Controllers
         // GET: Employees/Create
         public IActionResult Create()
         {
+            ViewData["Approvers"]  = GetApprovers();
             return View();
         }
 
@@ -109,8 +120,11 @@ namespace WebApplication1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeNumber,FirstName,LastName,CompanyEmail,PersonalEmail")] CreateEmployeeViewModel model)
+        public async Task<IActionResult> Create([Bind("EmployeeNumber,FirstName,LastName,CompanyEmail,PersonalEmail,ReportsTo,CanApprove")] CreateEmployeeViewModel model)
         {
+            
+            ViewData["Approvers"] = GetApprovers(model.ReportsTo);
+
             if (ModelState.IsValid)
             {
                 try
@@ -122,9 +136,12 @@ namespace WebApplication1.Controllers
                         EmployeeNumber = model.EmployeeNumber,
                         CompanyEmail = model.CompanyEmail,
                         PersonalEmail = model.PersonalEmail,
-                        CreatedBy = "N/A"
+                        CreatedBy = User.Identity.Name,
+                        ApproverID = model.ReportsTo,
+                        CanApprove = model.CanApprove
                     });
-                    return RedirectToAction(nameof(Index)).WithSuccess("Success", "Added new employee record");
+
+                    return Redirect(Url.Action("Index","Employees")).WithSuccess("Success", "Added new employee record");
                 }catch(SqlException ex)
                 {
                     return View(model).WithDanger("Duplicate key", ex.InnerException == null ? ex.Message : $"{ex.InnerException.Message}. {ex.Message}");
@@ -152,6 +169,14 @@ namespace WebApplication1.Controllers
             {
                 return NotFound();
             }
+
+            //get approver selected
+            var approvers = Mediator.Send(new GetApproverNamesAndEmailsOnly_Request()).Result.Result.ToList();
+            var boss = approvers.FirstOrDefault(i => i.Email == employee.ReportsTo);
+
+            ViewData["Approvers"] = GetApprovers(boss == null ? 0 : boss.ApproverID);
+
+
             return View(new UpdateEmployeeViewModel { 
                 EmployeeID = employee.EmployeeID,
                 FirstName = employee.FirstName,
@@ -159,8 +184,9 @@ namespace WebApplication1.Controllers
                 EmployeeNumber = employee.EmployeeNumber,
                 CompanyEmail = employee.CompanyEmail,
                 PersonalEmail = employee.PersonalEmail,
-                ModifiedBy = "N/A",
-                IsActive = employee.IsActive
+                IsActive = employee.IsActive,
+                ReportsTo = boss == null ? 0 : boss.ApproverID,
+                CanApprove = employee.CanApprove
             });
         }
 
@@ -169,27 +195,34 @@ namespace WebApplication1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("EmployeeNumber,FirstName,LastName,CompanyEmail,PersonalEmail,IsActive,EmployeeID")] UpdateEmployeeViewModel model)
+        public async Task<IActionResult> Edit(Guid id, [Bind("EmployeeID,EmployeeNumber,FirstName,LastName,CompanyEmail,PersonalEmail,IsActive,EmployeeID,ReportsTo,CanApprove")] UpdateEmployeeViewModel model)
         {
             if (id != model.EmployeeID)
             {
                 return NotFound();
             }
-
+            ViewData["Approvers"] = GetApprovers(model.ReportsTo);
             if (ModelState.IsValid)
             {
                 try
                 {
+                    
+
                     await Mediator.Send(new UpdateEmployee_Request {
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         EmployeeNumber = model.EmployeeNumber,
                         CompanyEmail = model.CompanyEmail,
                         PersonalEmail = model.PersonalEmail,
-                        ModifiedBy = "N/A",
+                        ModifiedBy = User.Identity.Name,
                         IsActive = model.IsActive,
-                        EmployeeID = model.EmployeeID
+                        EmployeeID = model.EmployeeID,
+                        ReportsTo = model.ReportsTo,
+                        CanApprove = model.CanApprove,
+                        
                     });
+
+                    return Redirect(Url.Action("Index", "Employees")).WithSuccess("Success", "Updated employee details");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -208,9 +241,9 @@ namespace WebApplication1.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return View(model).WithDanger(ex.GetType().ToString(), ex.Message);
+                    return View(model).WithDanger(ex.GetType().ToString(), ex.GetExceptionMessage());
                 }
-                return RedirectToAction(nameof(Index));
+               
             }
             return View(model);
         }

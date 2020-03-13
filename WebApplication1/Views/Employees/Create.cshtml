@@ -5,7 +5,7 @@
 }
 
 
-<div class="row justify-content-center p-5">
+<div class="row justify-content-center p-5 ">
     <div class="col-md-6">
         <div class="card shadow">
             <div class="card-header bg-success  text-center">
@@ -15,23 +15,40 @@
                 <form asp-action="Create">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
+                        <label asp-for="EmployeeNumber" class="control-label"></label>
                         <input asp-for="EmployeeNumber" class="form-control" placeholder="Employee Number" />
                         <span asp-validation-for="EmployeeNumber" class="text-danger"></span>
                     </div>
                     <div class="form-group">
+                        <label asp-for="FirstName" class="control-label"></label>
                         <input asp-for="FirstName" class="form-control" placeholder="First Name" />
                         <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
+                        <label asp-for="LastName" class="control-label"></label>
                         <input asp-for="LastName" class="form-control" placeholder="Last Name" />
                         <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
+                        <label asp-for="CompanyEmail" class="control-label"></label>
                         <input asp-for="CompanyEmail" class="form-control" placeholder="Company Email" />
                         <span asp-validation-for="CompanyEmail" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input asp-for="PersonalEmail" class="form-control" placeholder="Person Email" />
+                        <label asp-for="ReportsTo" class="control-label"></label>
+                        @*@Html.DropDownListFor(n => n.ReportsTo, new SelectList(@ViewBag.Approvers, "Email", "FullName"), "Not Applicable")*@
+                        <select asp-for="ReportsTo" class="form-control" asp-items="@(ViewBag.Approvers)"></select>
+                        <span asp-validation-for="ReportsTo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="CanApprove" /> @Html.DisplayNameFor(model => model.CanApprove)
+                        </label>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label asp-for="PersonalEmail" class="control-label"></label>
+                        <input asp-for="PersonalEmail" class="form-control" placeholder="Personal Email" />
                         <span asp-validation-for="PersonalEmail" class="text-danger"></span>
                     </div>
 

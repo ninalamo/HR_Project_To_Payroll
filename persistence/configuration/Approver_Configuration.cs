@@ -9,7 +9,7 @@ namespace persistence.configuration
         public void Configure(EntityTypeBuilder<Approver> builder)
         {
             builder.HasKey(i => i.ID).HasName("ApproverID");
-            builder.HasIndex(i => new { i.ID, i.TypeOfRequest, i.Level });
+            builder.HasIndex(i => new { i.EmployeeID, i.TypeOfRequest, i.Level }).IsUnique();
         }
     }
 }

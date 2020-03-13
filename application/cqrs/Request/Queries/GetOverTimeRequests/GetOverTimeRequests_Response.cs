@@ -28,6 +28,8 @@ namespace HR.Application.cqrs.Request.Queries
         public string Classification { get; set; }
         public DateTimeOffset ShiftDate { get; set; }
         public string Purpose { get; set; }
+        public string Approver1 => $"{ApproverFirstName1} {ApproverLastName1}";
+        public string Approver2 => $"{ApproverFirstName2} {ApproverLastName2}";
         public string ApproverFirstName1 { get; set; }
         public string ApproverLastName1 { get; set; }
         public string ApproverEmail1 { get; set; }
@@ -36,30 +38,36 @@ namespace HR.Application.cqrs.Request.Queries
         public string ApproverLastName2 { get; set; }
         public string ApproverEmail2 { get; set; }
         public bool? ApproverStatus2 { get; set; }
+        public string ApprovalStatusText1 => ApproverStatus1.HasValue ? ApproverStatus1.Value ? "Accepted" : "Denied" : "Pending";
+        public string ApprovalStatusText2 => ApproverStatus2.HasValue ? ApproverStatus2.Value ? "Accepted" : "Denied" : "Pending";
+        public bool Approved => (ApproverStatus1.HasValue && ApproverStatus1.Value) && (ApproverStatus2.HasValue && ApproverStatus2.Value);
+        public bool IsCancelled { get; set; }
+        public string CurrentApprover => !ApproverStatus1.HasValue ? ApproverEmail1 : ApproverEmail2;
 
         public void CreateMappings(Profile configuration)
         {
             configuration.CreateMap<domain.OverTimeRequest, GetOverTimeRequestsResponseDto>()
+                .ForMember(i => i.IsCancelled, opt => opt.MapFrom( o => o.Tracker.IsCancelled))
                 .ForMember(i => i.Requestor,
                     opt => opt.MapFrom(o => o.Tracker.Requestor == null ? "" : $"{o.Tracker.Requestor.FirstName} {o.Tracker.Requestor.LastName}"))
                 .ForMember(i => i.RequestorEmail,
                     opt => opt.MapFrom(o => o.Tracker.Requestor == null ? "" : o.Tracker.Requestor.CompanyEmail.ToLower()))
                 .ForMember(i => i.ApproverEmail1,
-                    opt => opt.MapFrom(o => o.Tracker.ApproverList.FirstOrDefault(i => i.Approver.Level == 1).Approver.Employee.CompanyEmail))
+                    opt => opt.MapFrom(o => o.Tracker.ApproverList.OrderBy(i => i.Approver.Level).FirstOrDefault().Approver.Employee.CompanyEmail))
                 .ForMember(i => i.ApproverFirstName1,
-                    opt => opt.MapFrom(o => o.Tracker.ApproverList.FirstOrDefault(i => i.Approver.Level == 1).Approver.Employee.FirstName))
+                    opt => opt.MapFrom(o => o.Tracker.ApproverList.OrderBy(i => i.Approver.Level).FirstOrDefault().Approver.Employee.FirstName))
                 .ForMember(i => i.ApproverLastName1,
-                    opt => opt.MapFrom(o => o.Tracker.ApproverList.FirstOrDefault(i => i.Approver.Level == 1).Approver.Employee.LastName))
+                    opt => opt.MapFrom(o => o.Tracker.ApproverList.OrderBy(i => i.Approver.Level).FirstOrDefault().Approver.Employee.LastName))
                 .ForMember(i => i.ApproverStatus1,
-                    opt => opt.MapFrom(o => o.Tracker.ApproverList.FirstOrDefault(i => i.Approver.Level == 1).Status))
+                    opt => opt.MapFrom(o => o.Tracker.ApproverList.OrderBy(i => i.Approver.Level).FirstOrDefault().Status))
                 .ForMember(i => i.ApproverEmail2,
-                    opt => opt.MapFrom(o => o.Tracker.ApproverList.FirstOrDefault(i => i.Approver.Level == 2).Approver.Employee.CompanyEmail))
+                    opt => opt.MapFrom(o => o.Tracker.ApproverList.OrderBy(i => i.Approver.Level).LastOrDefault().Approver.Employee.CompanyEmail))
                 .ForMember(i => i.ApproverFirstName2,
-                    opt => opt.MapFrom(o => o.Tracker.ApproverList.FirstOrDefault(i => i.Approver.Level == 2).Approver.Employee.FirstName))
+                       opt => opt.MapFrom(o => o.Tracker.ApproverList.OrderBy(i => i.Approver.Level).LastOrDefault().Approver.Employee.FirstName))
                 .ForMember(i => i.ApproverLastName2,
-                    opt => opt.MapFrom(o => o.Tracker.ApproverList.FirstOrDefault(i => i.Approver.Level == 2).Approver.Employee.LastName))
+                      opt => opt.MapFrom(o => o.Tracker.ApproverList.OrderBy(i => i.Approver.Level).LastOrDefault().Approver.Employee.LastName))
                 .ForMember(i => i.ApproverStatus2,
-                    opt => opt.MapFrom(o => o.Tracker.ApproverList.FirstOrDefault(i => i.Approver.Level == 2).Status));
+                    opt => opt.MapFrom(o => o.Tracker.ApproverList.OrderBy(i => i.Approver.Level).FirstOrDefault().Status));
 
         }
     }

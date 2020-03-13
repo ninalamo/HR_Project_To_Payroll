@@ -14,6 +14,7 @@ using WebApplication1.Models.Approvers;
 using HR.Application.cqrs.Approver.Commands;
 using WebApplication1.Extensions;
 using System.Security.Claims;
+using lib.common;
 
 namespace WebApplication1.Controllers
 {
@@ -53,7 +54,7 @@ namespace WebApplication1.Controllers
         // GET: Approvers/Create
         public IActionResult Create()
         {
-            ViewData["Employee"] = new SelectList(Mediator.Send(new GetEmployees_Request { PageNumber = 1, PageSize = 1000}).Result.Data, "CompanyEmail", "FullName");
+            ViewData["Employee"] = new SelectList(Mediator.Send(new GetEmployees_Request { PageNumber = 1, PageSize = 1000}).Result.Data.Where(i => i.CanApprove), "CompanyEmail", "FullName");
             return View();
         }
 
@@ -89,7 +90,7 @@ namespace WebApplication1.Controllers
                 }catch(Exception ex)
                 {
                     ViewData["Employee"] = list;
-                    return View(model).WithDanger("Error", ex.Message);
+                    return base.View(model).WithDanger("Error", ex.GetExceptionMessage());
                 }
             }
 
@@ -97,6 +98,8 @@ namespace WebApplication1.Controllers
 
             return View(model);
         }
+
+       
 
         // GET: Approvers/Edit/5
         public async Task<IActionResult> Edit(long? id)
@@ -154,7 +157,7 @@ namespace WebApplication1.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return View(model).WithDanger("Error", ex.Message);
+                    return View(model).WithDanger("Error", ex.GetExceptionMessage());
                 }
             }
 

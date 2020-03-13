@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 
 namespace lib.common
 {
@@ -16,6 +17,13 @@ namespace lib.common
                 "$1 $2"
             );
         }
+
+        public static string GetExceptionMessage(this Exception ex)
+        {
+            return ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+        }
     }
-   
+
+ 
+
 }

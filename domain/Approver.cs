@@ -11,6 +11,14 @@ namespace domain
         public RequestType TypeOfRequest { get; set; }
     }
 
+    public enum ApproverTypeEnum : int
+    {
+        FirstLevelApprover = 1,
+        SecondLevelApprover = 2,
+        ThirdLevelApprover = 3,
+        FinalApprover = 9999
+    }
+
    
 
 }

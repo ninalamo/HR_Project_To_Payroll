@@ -26,7 +26,10 @@ namespace WebApplication1.Models.Employees
         [EmailAddress]
         [Display(Name = "Personal Email")]
         public string PersonalEmail { get; set; }
-        public string ModifiedBy { get; set; }
+        [Required]
+        public bool CanApprove { get; set; }
+        public long ReportsTo { get; set; }
+        [Required]
         public bool IsActive { get;  set; }
     }
 }

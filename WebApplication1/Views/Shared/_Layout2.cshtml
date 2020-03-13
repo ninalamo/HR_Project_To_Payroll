@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>>
 <html lang="en" >
 <head>
     <meta charset="utf-8" />
@@ -7,20 +7,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="~/lib/datatable/datatables.min.css" rel="stylesheet" />
 
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/css/sb-admin-2.min.css" rel="stylesheet" />
+    <link href="~/css/site.min.css" rel="stylesheet" />
 </head>
-<body >
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                <div class="container">
-                   
+<body>
+   
+    <div class="container mb-5" style="background-image: url('img/senku.jpg');">
 
-                </div>
-            </nav>
-    </header>
-    <div class="container">
-
-        <main role="main" class="pb-3">
+        <main role="main" class="pb-5">
             @try
             {
                 @await Html.PartialAsync("_StatusMessage")
@@ -35,6 +29,7 @@
             &copy; 2020 - Remote Login - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/datatable/datatables.min.js"></script>
@@ -50,5 +45,6 @@
     <script src="~/lib/datatable/Buttons-1.6.1/js/buttons.print.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+
 </body>
 </html>

@@ -10,6 +10,6 @@ namespace domain
         public string CompanyEmail { get; set; }
         public string PersonalEmail { get; set; }
         public string ReportsTo { get; set; }
+        public bool CanApprove { get; set; }
     }
-
 }

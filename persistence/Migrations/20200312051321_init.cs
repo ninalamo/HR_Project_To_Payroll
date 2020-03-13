@@ -87,7 +87,7 @@ namespace HR.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Approvers", x => x.ID);
+                    table.PrimaryKey("ApproverID", x => x.ID);
                     table.ForeignKey(
                         name: "FK_Approvers_Employees_EmployeeID",
                         column: x => x.EmployeeID,
@@ -170,7 +170,8 @@ namespace HR.Persistence.Migrations
                     CreatedBy = table.Column<string>(nullable: true),
                     ModifiedBy = table.Column<string>(nullable: true),
                     RequestorID = table.Column<Guid>(nullable: false),
-                    TypeOfRequest = table.Column<long>(nullable: false)
+                    TypeOfRequest = table.Column<long>(nullable: false),
+                    IsCancelled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -225,7 +226,8 @@ namespace HR.Persistence.Migrations
                     ModifiedOn = table.Column<DateTimeOffset>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: true),
                     ModifiedBy = table.Column<string>(nullable: true),
-                    ApproverID = table.Column<long>(nullable: false),
+                    ApproverID = table.Column<long>(nullable: true),
+                    ApproverEmail = table.Column<string>(nullable: true),
                     Note = table.Column<string>(nullable: true),
                     Status = table.Column<bool>(nullable: true),
                     RequestTrackerID = table.Column<long>(nullable: true)
@@ -238,7 +240,7 @@ namespace HR.Persistence.Migrations
                         column: x => x.ApproverID,
                         principalTable: "Approvers",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ApprovalTrackers_RequestTrackers_RequestTrackerID",
                         column: x => x.RequestTrackerID,
@@ -309,9 +311,10 @@ namespace HR.Persistence.Migrations
                 column: "RequestTrackerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Approvers_EmployeeID",
+                name: "IX_Approvers_EmployeeID_TypeOfRequest_Level",
                 table: "Approvers",
-                column: "EmployeeID");
+                columns: new[] { "EmployeeID", "TypeOfRequest", "Level" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ConsolidatedTimeSheets_EmployeeID",
