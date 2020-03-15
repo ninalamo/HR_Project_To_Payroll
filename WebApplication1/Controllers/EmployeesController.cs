@@ -141,39 +141,34 @@ namespace WebApplication1.Controllers
                         CreatedBy = User.Identity.Name,
                         ApproverID = model.ReportsTo,
                         CanApprove = model.CanApprove
-                    });
+                    });       
 
                     return Redirect(Url.Action("Index","Employees")).WithSuccess("Success", "Added new employee record");
-                }catch(SqlException ex)
-                {
-                    return View(model).WithDanger("Duplicate key", ex.InnerException == null ? ex.Message : $"{ex.InnerException.Message}. {ex.Message}");
+
                 }catch(DbUpdateException ex)
                 {
-                    return View(model).WithDanger(nameof(DbUpdateException), "Duplicate key value found in the request. Please check required unique key values. Example Email(s) or Name(s) or Employee Number(s)");
+                    ErrorResponse.AddError(ex.GetExceptionMessage());
                 }catch(Exception ex)
                 {
-                    return View(model).WithDanger(ex.GetType().ToString(), ex.Message);
+                    ErrorResponse.AddError(ex.GetExceptionMessage());
                 }
             }
-            return View(model);
+            return View(model).WithDanger("Action cannot be completed", ErrorResponse.Message);
         }
 
         // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null || !id.HasValue)
-            {
                 return NotFound();
-            }
 
             var employee = await Mediator.Send(new GetEmployeeByIDRequest { EmployeeID = id.Value });
             if (employee == null)
-            {
                 return NotFound();
-            }
 
             //get approver selected
             var approvers = Mediator.Send(new GetApproverNamesAndEmailsOnly_Request()).Result.Result.ToList();
+
             var boss = approvers.FirstOrDefault(i => i.Email == employee.ReportsTo);
 
             ViewData["Approvers"] = GetApprovers(boss == null ? 0 : boss.ApproverID);
@@ -226,44 +221,26 @@ namespace WebApplication1.Controllers
 
                     return Redirect(Url.Action("Index", "Employees")).WithSuccess("Success", "Updated employee details");
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(model.EmployeeID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                catch (DbUpdateException)
-                {
-                    return View(model).WithDanger(nameof(DbUpdateException), "Duplicate key value found in the request. Please check required unique key values. Example Email(s) or Name(s) or Employee Number(s)");
-                }
+                
                 catch (Exception ex)
                 {
-                    return View(model).WithDanger(ex.GetType().ToString(), ex.GetExceptionMessage());
+                    ErrorResponse.AddError(ex.GetExceptionMessage());
                 }
                
             }
-            return View(model);
+            return View(model).WithDanger("Action cannot be completed", ErrorResponse.Message);
         }
 
         // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var response = await Mediator.Send(new GetEmployeeByIDRequest { EmployeeID = id.Value });
 
             if (response == null)
-            {
                 return NotFound();
-            }
 
             
 
@@ -283,8 +260,34 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await Mediator.Send(new DeleteEmployeeRequest { EmployeeID = id });
-            return RedirectToAction(nameof(Index)).WithInfo("Prompt", "Successfully removed.");
+            var response = await Mediator.Send(new GetEmployeeByIDRequest { EmployeeID = id });
+            try
+            {
+               
+                var account = await UserManager.FindByEmailAsync(response.CompanyEmail);
+                var result = await UserManager.DeleteAsync(account);
+
+                if (result.Succeeded)
+                {
+                    await Mediator.Send(new DeleteEmployeeRequest { EmployeeID = id });
+                    return RedirectToAction(nameof(Index)).WithInfo("Prompt", "Successfully removed.");
+                }
+            }catch(Exception ex)
+            {
+                ErrorResponse.AddError(ex.GetExceptionMessage());
+            }
+
+            return View(new DeleteEmployeeViewModel
+            {
+                FirstName = response.FirstName,
+                LastName = response.LastName,
+                EmployeeNumber = response.EmployeeNumber,
+                CompanyEmail = response.CompanyEmail,
+                PersonalEmail = response.PersonalEmail,
+                ModifiedBy = "N/A",
+                IsActive = response.IsActive
+            }).WithWarning("Action cancelled", ErrorResponse.Message);
+
         }
 
         #endregion

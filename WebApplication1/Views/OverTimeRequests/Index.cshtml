@@ -35,7 +35,7 @@
     <div class="tab-content" id="pills-tabContent">
         @if (User.HasClaim(domain.RequestType.Overtime.ToString(), "CanApprove"))
         {
-            <div class="tab-pane fade" id="pills-approver-pending" role="tabpanel" aria-labelledby="pills-approver-pending-tab">
+            <div class="tab-pane fade  show active" id="pills-approver-pending" role="tabpanel" aria-labelledby="pills-approver-pending-tab">
                 <partial name="_PendingOTApproverView" model="Model.Result" />
             </div>
         }

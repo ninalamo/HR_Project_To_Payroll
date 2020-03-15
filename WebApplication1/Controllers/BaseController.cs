@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.Models;
 using WebApplication1.Models.Employees;
 
 namespace WebApplication1.Controllers
@@ -47,9 +48,11 @@ namespace WebApplication1.Controllers
         }
 
         protected UserManager<IdentityUser> UserManager;
+        protected ErrorResponse ErrorResponse { get; set; }
         public BaseController(UserManager<IdentityUser> userManager)
         {
             this.UserManager = userManager;
+            ErrorResponse = new ErrorResponse();
         }
     }
 }
